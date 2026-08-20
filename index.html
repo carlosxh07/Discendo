@@ -983,6 +983,25 @@ Alles andere soll unverändert bleiben — ändere wirklich nur das, worum ich g
 
 Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
       </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <div class="prompt-card-icon">🧭</div>
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu7">📋 Kopieren</button>
+        </div>
+        <h4>Überlappende Elemente / unsichtbaren Text beheben</h4>
+        <p>Für Module wie die Themenlandkarte, wenn sich Elemente überlappen oder Beschriftungen fehlen bzw. nicht lesbar sind.</p>
+        <pre class="followup-prompt-text" id="fu7">In meinem Study Hub gibt es ein Darstellungsproblem: [beschreib genau wo — z. B. "in der Themenlandkarte überlappen sich die Knoten" oder "bei den großen/zentralen Elementen ist keine Beschriftung zu sehen"].
+
+Behebe das, indem du:
+- ausreichend Abstand zwischen allen Elementen und Beschriftungen einplanst, sodass nichts mehr überlappt,
+- sicherstellst, dass wirklich jeder Knoten/jedes Element — auch große oder zentrale — sichtbaren, gut lesbaren Text zeigt,
+- im Zweifel ein einfacheres Layout wählst (z. B. Baumstruktur oder Raster statt eines engen, radialen Layouts), wenn das bisherige bei der Menge an Inhalten nicht zuverlässig lesbar bleibt.
+
+Ändere sonst nichts an Design, Struktur oder Inhalt.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
     </div>
   </div>
 </section>
@@ -1463,7 +1482,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     let p = `Ich ${verb} ${program} und lade dir gleich mein Lernmaterial hoch (Skript, Folien oder Mitschrift).\n\n`;
     p += `Fass den Inhalt strukturiert nach Kapitel bzw. Thema zusammen — vollständig, aber kompakt. ${focus}\n\n`;
     p += `Erklär die Konzepte in eigenen, verständlichen Worten statt Sätze nur zu kürzen. Wenn etwas im Material explizit als besonders wichtig oder klausurrelevant hervorgehoben ist, kennzeichne das deutlich.\n\n`;
-    p += `Gib mir das Ergebnis am Ende als einen zusammenhängenden Text aus, den ich direkt kopieren kann — ohne zusätzlichen Chat-Kommentar drumherum.`;
+    p += `Gib mir das Ergebnis am Ende als einen zusammenhängenden Text aus, den ich direkt kopieren kann — ohne zusätzlichen Chat-Kommentar drumherum. Pack den Text dafür in einen Code-Block (dreifache Backticks), damit ich ihn über den automatischen Kopieren-Button übernehmen kann.`;
     return p;
   }
 
@@ -1607,7 +1626,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     'Experiment-Trainer': 'Baue einen Modus für Rechenaufgaben, Versuchsauswertungen oder Herleitungen aus meinem Lernstoff. Für jede Aufgabe: erst die Aufgabenstellung zeigen, dann in gestuften Hilfen durch den Lösungsweg führen (Hinweis 1: welcher Ansatz/welche Formel ist relevant, Hinweis 2: nächster Rechenschritt, Hinweis 3: falls nötig ein Teilergebnis) statt direkt die komplette Lösung zu zeigen. Ich soll selbst rechnen und meine Zwischenergebnisse eingeben können; bewerte sie ehrlich und zeig bei Fehlern genau, an welchem Schritt es hakt und warum. Am Ende jeder Aufgabe die vollständige, sauber nachvollziehbare Musterlösung mit allen Zwischenschritten.',
     'Unterrichtsentwurf-Baustein': 'Baue ein Modul, mit dem ich typische Unterrichtsplanungs- und Didaktik-Szenarien aus meinem Lernstoff üben kann (z. B. Stundenaufbau planen, Lernziele nach Taxonomiestufen formulieren, passende Methode für eine gegebene Klassensituation wählen, Differenzierung für heterogene Lerngruppen). Stell mir konkrete Planungsaufgaben, lass mich meinen Entwurf oder meine Entscheidung eingeben, und gib danach ehrliches, konkretes Feedback: was an Aufbau, Zielformulierung oder Methodenwahl schon stimmig ist, was fehlt oder nicht zusammenpasst, und wie es besser ginge — mit Bezug auf die didaktischen Prinzipien aus meinem Lernstoff, nicht nur allgemeine Floskeln.',
     'Begriffs-Glossar': 'Baue ein durchsuchbares Glossar aller Fachbegriffe aus meinem Lernstoff. Jeder Eintrag braucht: den Begriff, eine klare und einfache Definition in eigenen Worten (nicht nur die Originalformulierung kopiert), in welchem Kapitel/Thema er vorkommt, und wo sinnvoll einen Verweis auf verwandte oder oft verwechselte Begriffe mit einer kurzen, konkreten Abgrenzung (worin genau liegt der Unterschied). Bau eine Suchleiste/ein Filterfeld ein, mit dem ich nach Buchstabe oder Stichwort schnell den passenden Begriff finde. Markiere Begriffe visuell (z. B. mit einem Symbol), die besonders klausurrelevant sind, etwa weil sie mehrfach im Stoff vorkommen oder explizit als wichtig hervorgehoben wurden.',
-    'Themenlandkarte': 'Baue eine interaktive Themenlandkarte, die zeigt, wie die einzelnen Themen und Kapitel meines Lernstoffs inhaltlich zusammenhängen — keine lose Liste, sondern echte Verbindungen wie "baut auf ... auf", "steht im Gegensatz zu ...", "wird angewendet bei ...". Übergeordnete oder zentrale Themen sollen visuell hervorgehoben sein, Unterthemen ordnen sich sichtbar darunter oder daneben ein. Beim Anklicken eines Themas soll eine kurze Erklärung erscheinen, warum genau es mit den verbundenen Themen zusammenhängt — nicht nur dass eine Linie zwischen ihnen existiert. Ziel: ich soll den roten Faden durch den Stoff erkennen, nicht nur einzelne isolierte Fakten auswendig lernen.',
+    'Themenlandkarte': 'Baue eine interaktive Themenlandkarte, die zeigt, wie die einzelnen Themen und Kapitel meines Lernstoffs inhaltlich zusammenhängen — keine lose Liste, sondern echte Verbindungen wie "baut auf ... auf", "steht im Gegensatz zu ...", "wird angewendet bei ...". Übergeordnete oder zentrale Themen sollen visuell hervorgehoben sein (größere Kreise/Kästen mit klar lesbarer Beschriftung direkt darin oder direkt daneben — nicht nur ein Punkt ohne sichtbaren Text), Unterthemen ordnen sich sichtbar darunter oder daneben ein. Achte besonders darauf, dass sich Knoten und Beschriftungen nicht überlappen und dass wirklich jeder Knoten — auch die großen, zentralen — gut lesbaren Text zeigt; plane dafür ausreichend Abstand ein und wähl bei vielen Themen lieber ein einfacheres Layout (z. B. eine vertikale Baumstruktur oder ein Raster) statt eines engen, radialen Layouts, das schnell unübersichtlich wird. Beim Anklicken eines Themas soll eine kurze Erklärung erscheinen, warum genau es mit den verbundenen Themen zusammenhängt — nicht nur dass eine Linie zwischen ihnen existiert. Ziel: ich soll den roten Faden durch den Stoff erkennen, nicht nur einzelne isolierte Fakten auswendig lernen.',
     'Wiederholungsplan': 'Baue einen Wiederholungsplan-Modus. Frag mich zu Beginn, wie viele Tage ich noch bis zur Prüfung habe, und erstelle daraus einen konkreten Tagesplan, welche Themen oder Module an welchem Tag wiederholt werden sollten — orientiert an Menge und Schwierigkeit meines Lernstoffs, mit mehr Wiederholungen kurz vor der Prüfung und besonders für die schwierigsten Themen. Der Plan soll sich an meinem tatsächlichen Fortschritt anpassen: Themen, die ich im Quiz oder im Schwachstellen-Radar schon sicher beherrsche, sollen im Plan seltener vorkommen, unsichere Themen häufiger. Zeig den Plan als einfache, abhakbare Tagesliste, damit ich sehe, was ich schon erledigt habe und was noch ansteht.',
     'Mündliche-Prüfung-Trainer': 'Baue einen Modus für mündliche Prüfungen. Stell mir Fragen zu meinem Lernstoff so, wie ein Prüfer es tun würde — mit gezielten Nachfragen, wenn meine Antwort unvollständig, ungenau oder zu oberflächlich war, und gelegentlichen "Was wäre, wenn..."-Fragen, die über reines Auswendiglernen hinausgehen und wirkliches Verständnis prüfen. Bewerte meine Antworten ehrlich und mündlich-prüfungsnah — nicht nur richtig/falsch, sondern auch danach, wie sicher, vollständig und strukturiert die Antwort war. Gib nach jeder Antwort kurzes, konkretes Feedback (was gut war, was gefehlt hat), bevor die nächste Frage kommt, statt am Ende nur eine Gesamtpunktzahl zu nennen.'
   };
@@ -1618,6 +1637,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     'Bau, wo sinnvoll, kurze deutsche Merksätze/Eselsbrücken ein, damit ich mir Dinge unter Prüfungsdruck schneller merken kann.',
     'Organisiere Inhalte wo möglich nach Fragennummer bzw. Themennummer, nicht nur lose nach Thema — das hilft mir unter Zeitdruck beim gezielten Nachschlagen.',
     'Wenn du Inhalte ergänzt, die nicht direkt aus meinem eingefügten Lernstoff stammen, kennzeichne sie deutlich (z. B. mit einem ⚠️-Symbol), damit ich immer weiß, was offizieller Stoff ist und was zusätzlich dazugekommen ist.',
+    'Bei allen visuellen oder verschachtelten Darstellungen (z. B. Diagrammen, Landkarten, Zeitleisten, Netzwerk-/Graph-Ansichten): Achte von Anfang an konsequent darauf, dass sich Elemente und Beschriftungen niemals überlappen und dass wirklich jeder Text — auch in großen, zentralen oder hervorgehobenen Elementen — gut lesbar und sichtbar bleibt. Plane dafür großzügig Abstand und Platz ein, bevor du mit dem Bauen anfängst, und wähl im Zweifel ein einfacheres, aber zuverlässig lesbares Layout statt eines optisch dichteren, das bei mehr Inhalten schnell unleserlich wird.',
     'Baue das Ganze als eine einzelne, in sich geschlossene HTML-Datei (CSS und JS eingebettet, keine externen Frameworks nötig).'
   ];
 
@@ -1855,9 +1875,10 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 
     document.getElementById('builder').style.display = 'none';
     document.getElementById('how').style.display = 'none';
+    document.getElementById('guide').style.display = 'none';
     document.querySelector('.hero').style.display = 'none';
     document.getElementById('result').style.display = 'block';
-    window.scrollTo({top:0, behavior:'smooth'});
+    document.getElementById('result').scrollIntoView({behavior:'instant', block:'start'});
   });
 
   // ---- Rechtsseiten (Impressum, Datenschutz, AGB, Kontakt) als eigene Vollbild-Ansicht ----
@@ -1891,6 +1912,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     document.getElementById('result').style.display = 'none';
     document.getElementById('builder').style.display = '';
     document.getElementById('how').style.display = '';
+    document.getElementById('guide').style.display = '';
     document.querySelector('.hero').style.display = '';
   }
 
