@@ -435,6 +435,27 @@
   .thankyou-option h3{font-size:15.5px; font-weight:600; color:#fff; margin-bottom:6px;}
   .thankyou-option p{font-size:12.5px; color:var(--muted); line-height:1.5; margin-bottom:0;}
   .thankyou-note{font-family:'JetBrains Mono',monospace; font-size:12px; color:#7C8CAD;}
+
+  /* ---- Passwort-Freischaltung (temporär, bis Stripe verifiziert ist) ---- */
+  #passwordGate{
+    display:none; position:fixed; inset:0; z-index:200; align-items:center; justify-content:center;
+    background:rgba(6,14,28,.75); backdrop-filter:blur(6px); padding:24px;
+  }
+  .password-card{
+    max-width:420px; width:100%; background:var(--ink-2); border:1px solid var(--line); border-radius:20px;
+    padding:38px 32px; text-align:center; box-shadow:0 30px 70px rgba(0,0,0,.5);
+  }
+  .password-card h3{font-size:20px; font-weight:700; color:#fff; margin-bottom:10px;}
+  .password-card p{font-size:13.5px; color:var(--muted); line-height:1.55; margin-bottom:22px;}
+  .password-card input{
+    width:100%; padding:13px 16px; border-radius:10px; border:1.5px solid var(--line);
+    background:rgba(255,255,255,.05); color:#fff; font-family:'Inter',sans-serif; font-size:15px;
+    margin-bottom:12px; text-align:center; letter-spacing:.04em;
+  }
+  .password-card input:focus{outline:none; border-color:var(--accent);}
+  .password-error{color:#E88; font-size:13px; margin-bottom:12px; display:none;}
+  .password-actions{display:flex; gap:10px;}
+  .password-actions .btn{flex:1;}
 </style>
 </head>
 <body>
@@ -712,6 +733,19 @@
     <div class="thankyou-note">Beide Optionen enthalten den vollen Funktionsumfang — du kannst auch später jederzeit wechseln.</div>
   </div>
 </section>
+
+<div id="passwordGate">
+  <div class="password-card">
+    <h3>🔒 Früher Zugriff</h3>
+    <p>Discendo ist noch nicht offiziell live (Zahlungsanbieter wird gerade verifiziert). Mit dem Zugangscode kommst du trotzdem schon rein.</p>
+    <input type="password" id="passwordInput" placeholder="Zugangscode" autocomplete="off">
+    <div class="password-error" id="passwordError">Falscher Code, versuch's nochmal.</div>
+    <div class="password-actions">
+      <button class="btn btn-ghost" id="passwordCancel">Abbrechen</button>
+      <button class="btn btn-primary" id="passwordSubmit">Freischalten</button>
+    </div>
+  </div>
+</div>
 
 <div id="app" style="display:none;">
 
@@ -1282,70 +1316,46 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 
 <script>
   // ==========================================================================
-  // ECHTE ZAHLUNG:
-  // 1. Leg ein Produkt bei einem Zahlungsanbieter an, der Checkout + VAT/Steuer
-  //    übernimmt — z. B. Digistore24 oder Lemon Squeezy (lemonsqueezy.com).
-  // 2. Trag unten bei CHECKOUT_URL den echten Checkout-Link deines Produkts ein.
-  // 3. Stell in den Produkt-Einstellungen als "Thank you page" / "Redirect nach
-  //    Zahlung" genau diese URL ein: https://DEINE-DOMAIN.de/?paid=1
-  //    (also deine eigene, live gehostete Domain + "?paid=1" am Ende).
-  // Ohne diese Einstellung merkt die Seite nicht, dass bezahlt wurde.
-  // Bei ?paid=1 zeigt die Seite zuerst die Danke-Seite (#thankYou) mit den
-  // beiden Optionen "online nutzen" oder "als Datei herunterladen".
+  // TEMPORÄRER PASSWORT-MODUS — solange Stripe/Digistore24 noch nicht verifiziert ist.
+  // Zugangscode unten ändern, wenn du ihn an bestimmte Leute weitergeben willst.
+  // Sobald echte Zahlung läuft: diesen ganzen Block durch die Checkout-Version
+  // ersetzen (siehe index-live-checkout-BACKUP.html für die fertige Version).
   // ==========================================================================
-  const CHECKOUT_URL = 'https://DEIN-ANBIETER.com/checkout/ERSETZE-MICH'; // TODO: echten Checkout-Link eintragen
-  const IS_PLACEHOLDER = CHECKOUT_URL.includes('DEIN-ANBIETER'); // erkennt automatisch, ob der echte Link schon eingetragen ist
+  const ACCESS_CODE = 'discendo2026'; // TODO: eigenen Code eintragen, falls gewünscht
 
   document.querySelectorAll('.buy-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if(IS_PLACEHOLDER){
-        // TESTMODUS: noch kein echter Checkout-Link eingetragen — zeigt direkt
-        // die Danke-Seite, damit man den ganzen Flow inkl. Download testen kann.
-        // Verschwindet automatisch, sobald CHECKOUT_URL oben ersetzt wird.
-        document.getElementById('salesPage').style.display = 'none';
-        document.getElementById('thankYou').style.display = 'flex';
-        window.scrollTo({top: 0, behavior: 'instant'});
-      } else {
-        window.location.href = CHECKOUT_URL;
-      }
+      document.getElementById('passwordError').style.display = 'none';
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('passwordGate').style.display = 'flex';
+      document.getElementById('passwordInput').focus();
     });
   });
 
-  // Freischaltung NUR wenn die Seite mit ?paid=1 aufgerufen wird — das setzt
-  // der Zahlungsanbieter selbst, nachdem die Zahlung wirklich durchgegangen ist.
-  function unlockIfPaid(){
-    const params = new URLSearchParams(window.location.search);
-    if(params.get('paid') === '1'){
+  function checkAccessCode(){
+    const val = document.getElementById('passwordInput').value.trim();
+    if(val === ACCESS_CODE){
+      document.getElementById('passwordGate').style.display = 'none';
       document.getElementById('salesPage').style.display = 'none';
-      document.getElementById('thankYou').style.display = 'flex';
+      document.getElementById('app').style.display = 'block';
+      window.scrollTo({top: 0, behavior: 'instant'});
+    } else {
+      document.getElementById('passwordError').style.display = 'block';
     }
   }
-  unlockIfPaid();
 
-  document.getElementById('useOnlineBtn').addEventListener('click', () => {
-    document.getElementById('thankYou').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    window.scrollTo({top: 0, behavior: 'instant'});
+  document.getElementById('passwordSubmit').addEventListener('click', checkAccessCode);
+  document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') checkAccessCode();
   });
-
-  document.getElementById('downloadToolBtn').addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.href = 'discendo-tool.html';
-    link.download = 'discendo-tool.html';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // Nach dem Download trotzdem direkt online weiterarbeiten lassen
-    document.getElementById('thankYou').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    window.scrollTo({top: 0, behavior: 'instant'});
+  document.getElementById('passwordCancel').addEventListener('click', () => {
+    document.getElementById('passwordGate').style.display = 'none';
   });
 
   // Klick auf "Discendo" (in jeder Nav) bringt immer zurück zur Startseite (Sales-Page)
   document.querySelectorAll('.logo').forEach(logo => {
     logo.addEventListener('click', () => {
       document.getElementById('app').style.display = 'none';
-      document.getElementById('thankYou').style.display = 'none';
       document.getElementById('salesPage').style.display = '';
       if(typeof restoreHomeView === 'function') restoreHomeView();
       window.scrollTo({top: 0, behavior: 'smooth'});
