@@ -24,8 +24,8 @@
     --ok:#34C77B;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Inter',sans-serif; background:var(--ink); color:#EAF0FF; -webkit-font-smoothing:antialiased;}
+  html{scroll-behavior:smooth; overflow-x:hidden; max-width:100%;}
+  body{font-family:'Inter',sans-serif; background:var(--ink); color:#EAF0FF; -webkit-font-smoothing:antialiased; overflow-x:hidden; max-width:100%;}
   h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
   .mono{font-family:'JetBrains Mono',monospace;}
   a{color:inherit;}
@@ -365,6 +365,9 @@
     .hero-visual svg{width:264px; height:264px;}
     section{padding:64px 20px;}
     .steps{grid-template-columns:1fr;}
+    .steps-4{grid-template-columns:1fr;}
+    .style-cards{grid-template-columns:1fr;}
+    .thankyou-options{grid-template-columns:1fr;}
     .prompt-cards-grid{grid-template-columns:1fr;}
     .builder-grid{grid-template-columns:1fr;}
     .bom{position:static;}
@@ -471,7 +474,13 @@
   .thankyou-option:hover{border-color:rgba(76,141,255,.4); transform:translateY(-2px);}
   .thankyou-option h3{font-size:15.5px; font-weight:600; color:#fff; margin-bottom:6px;}
   .thankyou-option p{font-size:12.5px; color:var(--muted); line-height:1.5; margin-bottom:0;}
-  .thankyou-note{font-family:'JetBrains Mono',monospace; font-size:12px; color:#7C8CAD;}
+  .thankyou-note{font-family:'JetBrains Mono',monospace; font-size:12px; color:#7C8CAD; line-height:1.6;}
+  .thankyou-device-tip{
+    margin-top:22px; padding:18px 20px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+    border-radius:14px; text-align:left; font-size:13px; color:var(--muted); line-height:1.6;
+  }
+  .thankyou-device-tip b{color:#fff;}
+  .thankyou-device-detail{margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:12.5px;}
 
   /* ---- Passwort-Freischaltung (temporär, bis Stripe verifiziert ist) ---- */
   #passwordGate{
@@ -739,163 +748,6 @@
   </div>
 </section>
 
-<section id="guide">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-eyebrow">Für Claude-Einsteiger</div>
-      <h2>Was passiert eigentlich mit dem fertigen Prompt?</h2>
-      <p>Falls du noch nicht so oft mit Claude gearbeitet hast: hier kurz erklärt, was nach dem Kopieren passiert — und ein paar nützliche Prompts für danach.</p>
-    </div>
-
-    <div class="steps steps-4" style="margin-bottom:72px;">
-      <div class="step">
-        <div class="step-num">01 — PROMPT EINFÜGEN</div>
-        <h3>In Claude einfügen</h3>
-        <p>Öffne einen neuen Chat auf claude.ai und füg den kompletten Prompt ein, den du oben kopiert hast — dein Lernstoff und deine Design-Wahl sind schon eingebaut.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02 — CLAUDE BAUT DEN CODE</div>
-        <h3>Kurz warten</h3>
-        <p>Claude erstellt daraus eine einzelne HTML-Datei mit deinem kompletten Study Hub. Das dauert meist unter einer Minute.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03 — DATEI SICHERN</div>
-        <h3>Herunterladen</h3>
-        <p>Claude bietet dir die fertige Datei zum Download an. Falls stattdessen nur Code angezeigt wird: alles markieren, kopieren, in eine leere Datei mit der Endung ".html" einfügen und speichern.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">04 — ÖFFNEN & TEILEN</div>
-        <h3>Nutzen</h3>
-        <p>Doppelklick öffnet die Datei direkt im Browser — kein Hosting nötig. Zum Teilen einfach die Datei verschicken, z. B. per WhatsApp oder Mail.</p>
-      </div>
-    </div>
-
-    <div class="section-head">
-      <div class="section-eyebrow">Mehrere Fächer</div>
-      <h2>Mehrere Study Hubs zu einem verbinden</h2>
-      <p>Hast du für verschiedene Fächer schon eigene Study Hubs gebaut? Trag hier die Fächer ein und bekomm einen Prompt, der sie zu einem gemeinsamen Study Hub mit Fach-Navigation zusammenführt — die HTML-Dateien lädst du dabei einfach direkt als Anhang mit hoch, das kann Claude problemlos.</p>
-    </div>
-
-    <div class="design-box" style="margin-bottom:72px;">
-      <div id="mergeSlots"></div>
-      <button class="btn btn-ghost" id="addMergeSlot" style="margin-bottom:10px;">+ Weiteres Fach hinzufügen</button>
-
-      <div class="prompt-header" style="margin-top:24px;">
-        <span class="tutorial-prompt-label" style="margin-bottom:0;">Zusammenführungs-Prompt</span>
-        <button class="copy-btn on-light" id="copyMergeBtn">Kopieren</button>
-      </div>
-      <pre id="mergePromptOutput"></pre>
-
-      <div class="tutorial-tip" style="margin-top:0;">
-        <b>Nicht vergessen:</b> Lad beim Abschicken in Claude alle betroffenen HTML-Dateien direkt mit hoch (per Anhang-Button oder Drag & Drop in den Chat) — der Prompt allein reicht nicht, Claude muss die Dateien ja sehen können.
-      </div>
-    </div>
-
-    <div class="section-head">
-      <div class="section-eyebrow">Danach</div>
-      <h2>Nützliche Folge-Prompts</h2>
-      <p>Dein Study Hub ist fertig, aber nicht in Stein gemeißelt. Für diese Situationen kannst du einfach wieder mit Claude weiterarbeiten — im selben Chat oder einem neuen. Lad dafür einfach deine bestehende Study-Hub-Datei mit hoch, wenn du den Prompt abschickst.</p>
-    </div>
-
-    <div class="prompt-cards-grid">
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu1">Kopieren</button>
-        </div>
-        <h4>Neues Thema ergänzen</h4>
-        <p>Du hast neuen Stoff bekommen (z. B. eine weitere Vorlesung) und willst ihn zum bestehenden Study Hub hinzufügen, ohne alles neu zu bauen.</p>
-        <pre class="followup-prompt-text" id="fu1">Ich hab neuen Lernstoff zu einem Thema bekommen, das noch nicht in meinem Study Hub enthalten ist. Ergänze meinen bestehenden Study Hub um dieses Thema — behalte Struktur, Design und alle bisherigen Inhalte exakt so bei, wie sie sind, füg nur das Neue hinzu.
-
-Hier ist der neue Lernstoff:
-"""
-[hier den neuen Stoff einfügen]
-"""
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu2">Kopieren</button>
-        </div>
-        <h4>Design nachträglich ändern</h4>
-        <p>Die Module und Inhalte passen, aber Farben oder Stil sollen sich ändern — ohne den Rest anzufassen.</p>
-        <pre class="followup-prompt-text" id="fu2">Ändere nur das Design meines Study Hub — konkret: [z. B. "Farbpalette auf Grün und Beige umstellen" oder "von Dark Mode auf Light Mode wechseln"]. Lass Struktur, Module und alle Inhalte exakt unverändert, ändere wirklich nur das Aussehen.
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu3">Kopieren</button>
-        </div>
-        <h4>Fehler beheben</h4>
-        <p>Irgendetwas funktioniert nicht wie erwartet — ein Button reagiert nicht, eine Anzeige ist falsch, o. ä.</p>
-        <pre class="followup-prompt-text" id="fu3">In meinem Study Hub funktioniert etwas nicht richtig. Das Problem: [beschreib genau, was du erwartest und was stattdessen passiert].
-
-Behebe den Fehler, ohne sonst etwas an Design, Struktur oder Inhalt zu verändern.
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu4">Kopieren</button>
-        </div>
-        <h4>Modul nachträglich hinzufügen</h4>
-        <p>Du hast beim Bauen ein Modul nicht ausgewählt und willst es jetzt doch noch ergänzen.</p>
-        <pre class="followup-prompt-text" id="fu4">Ergänze meinen bestehenden Study Hub um folgendes zusätzliches Modul: [Modul-Name und kurze Beschreibung, z. B. "Formelkasten: alle Formeln an einem Ort mit Erklärung, wann welche greift"].
-
-Behalte alle bisherigen Module, Inhalte und das Design unverändert bei — das neue Modul soll sich einfügen, nicht ersetzen.
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu5">Kopieren</button>
-        </div>
-        <h4>Verstehen, wie der Code funktioniert</h4>
-        <p>Für alle, die dabei auch was über Programmieren/Prompting lernen wollen, statt nur das Ergebnis zu nutzen.</p>
-        <pre class="followup-prompt-text" id="fu5">Erklär mir in einfachen Worten, wie dieser Code aufgebaut ist — welche Teile es gibt (HTML, CSS, JavaScript) und wofür sie jeweils da sind. Ich will grob verstehen, was hier passiert, ohne dass du technisches Vorwissen voraussetzt.
-
-Die Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu6">Kopieren</button>
-        </div>
-        <h4>Allgemeine Anpassung</h4>
-        <p>Ein Alleskönner-Prompt für alles, was in keine der anderen Kategorien passt.</p>
-        <pre class="followup-prompt-text" id="fu6">Ich möchte folgende Änderung an meinem Study Hub: [beschreib genau, was anders sein soll].
-
-Alles andere soll unverändert bleiben — ändere wirklich nur das, worum ich gebeten habe.
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-
-      <div class="prompt-card">
-        <div class="prompt-card-head">
-          <button class="copy-btn on-dark followup-copy-btn" data-target="fu7">Kopieren</button>
-        </div>
-        <h4>Überlappende Elemente / unsichtbaren Text beheben</h4>
-        <p>Für Module wie die Themenlandkarte, wenn sich Elemente überlappen oder Beschriftungen fehlen bzw. nicht lesbar sind.</p>
-        <pre class="followup-prompt-text" id="fu7">In meinem Study Hub gibt es ein Darstellungsproblem: [beschreib genau wo — z. B. "in der Themenlandkarte überlappen sich die Knoten" oder "bei den großen/zentralen Elementen ist keine Beschriftung zu sehen"].
-
-Behebe das, indem du:
-- ausreichend Abstand zwischen allen Elementen und Beschriftungen einplanst, sodass nichts mehr überlappt,
-- sicherstellst, dass wirklich jeder Knoten/jedes Element — auch große oder zentrale — sichtbaren, gut lesbaren Text zeigt,
-- im Zweifel ein einfacheres Layout wählst (z. B. Baumstruktur oder Raster statt eines engen, radialen Layouts), wenn das bisherige bei der Menge an Inhalten nicht zuverlässig lesbar bleibt.
-
-Ändere sonst nichts an Design, Struktur oder Inhalt.
-
-Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="builder">
   <div class="section-inner">
 
@@ -1152,6 +1004,163 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   </div>
 </section>
 
+<section id="guide">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">Für Claude-Einsteiger</div>
+      <h2>Was passiert eigentlich mit dem fertigen Prompt?</h2>
+      <p>Falls du noch nicht so oft mit Claude gearbeitet hast: hier kurz erklärt, was nach dem Kopieren passiert — und ein paar nützliche Prompts für danach.</p>
+    </div>
+
+    <div class="steps steps-4" style="margin-bottom:72px;">
+      <div class="step">
+        <div class="step-num">01 — PROMPT EINFÜGEN</div>
+        <h3>In Claude einfügen</h3>
+        <p>Öffne einen neuen Chat auf claude.ai und füg den kompletten Prompt ein, den du oben kopiert hast — dein Lernstoff und deine Design-Wahl sind schon eingebaut.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02 — CLAUDE BAUT DEN CODE</div>
+        <h3>Kurz warten</h3>
+        <p>Claude erstellt daraus eine einzelne HTML-Datei mit deinem kompletten Study Hub. Das dauert meist unter einer Minute.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03 — DATEI SICHERN</div>
+        <h3>Herunterladen</h3>
+        <p>Claude bietet dir die fertige Datei zum Download an. Falls stattdessen nur Code angezeigt wird: alles markieren, kopieren, in eine leere Datei mit der Endung ".html" einfügen und speichern.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04 — ÖFFNEN & TEILEN</div>
+        <h3>Nutzen</h3>
+        <p>Doppelklick öffnet die Datei direkt im Browser — kein Hosting nötig. Zum Teilen einfach die Datei verschicken, z. B. per WhatsApp oder Mail.</p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-eyebrow">Mehrere Fächer</div>
+      <h2>Mehrere Study Hubs zu einem verbinden</h2>
+      <p>Hast du für verschiedene Fächer schon eigene Study Hubs gebaut? Trag hier die Fächer ein und bekomm einen Prompt, der sie zu einem gemeinsamen Study Hub mit Fach-Navigation zusammenführt — die HTML-Dateien lädst du dabei einfach direkt als Anhang mit hoch, das kann Claude problemlos.</p>
+    </div>
+
+    <div class="design-box" style="margin-bottom:72px;">
+      <div id="mergeSlots"></div>
+      <button class="btn btn-ghost" id="addMergeSlot" style="margin-bottom:10px;">+ Weiteres Fach hinzufügen</button>
+
+      <div class="prompt-header" style="margin-top:24px;">
+        <span class="tutorial-prompt-label" style="margin-bottom:0;">Zusammenführungs-Prompt</span>
+        <button class="copy-btn on-light" id="copyMergeBtn">Kopieren</button>
+      </div>
+      <pre id="mergePromptOutput"></pre>
+
+      <div class="tutorial-tip" style="margin-top:0;">
+        <b>Nicht vergessen:</b> Lad beim Abschicken in Claude alle betroffenen HTML-Dateien direkt mit hoch (per Anhang-Button oder Drag & Drop in den Chat) — der Prompt allein reicht nicht, Claude muss die Dateien ja sehen können.
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-eyebrow">Danach</div>
+      <h2>Nützliche Folge-Prompts</h2>
+      <p>Dein Study Hub ist fertig, aber nicht in Stein gemeißelt. Für diese Situationen kannst du einfach wieder mit Claude weiterarbeiten — im selben Chat oder einem neuen. Lad dafür einfach deine bestehende Study-Hub-Datei mit hoch, wenn du den Prompt abschickst.</p>
+    </div>
+
+    <div class="prompt-cards-grid">
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu1">Kopieren</button>
+        </div>
+        <h4>Neues Thema ergänzen</h4>
+        <p>Du hast neuen Stoff bekommen (z. B. eine weitere Vorlesung) und willst ihn zum bestehenden Study Hub hinzufügen, ohne alles neu zu bauen.</p>
+        <pre class="followup-prompt-text" id="fu1">Ich hab neuen Lernstoff zu einem Thema bekommen, das noch nicht in meinem Study Hub enthalten ist. Ergänze meinen bestehenden Study Hub um dieses Thema — behalte Struktur, Design und alle bisherigen Inhalte exakt so bei, wie sie sind, füg nur das Neue hinzu.
+
+Hier ist der neue Lernstoff:
+"""
+[hier den neuen Stoff einfügen]
+"""
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu2">Kopieren</button>
+        </div>
+        <h4>Design nachträglich ändern</h4>
+        <p>Die Module und Inhalte passen, aber Farben oder Stil sollen sich ändern — ohne den Rest anzufassen.</p>
+        <pre class="followup-prompt-text" id="fu2">Ändere nur das Design meines Study Hub — konkret: [z. B. "Farbpalette auf Grün und Beige umstellen" oder "von Dark Mode auf Light Mode wechseln"]. Lass Struktur, Module und alle Inhalte exakt unverändert, ändere wirklich nur das Aussehen.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu3">Kopieren</button>
+        </div>
+        <h4>Fehler beheben</h4>
+        <p>Irgendetwas funktioniert nicht wie erwartet — ein Button reagiert nicht, eine Anzeige ist falsch, o. ä.</p>
+        <pre class="followup-prompt-text" id="fu3">In meinem Study Hub funktioniert etwas nicht richtig. Das Problem: [beschreib genau, was du erwartest und was stattdessen passiert].
+
+Behebe den Fehler, ohne sonst etwas an Design, Struktur oder Inhalt zu verändern.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu4">Kopieren</button>
+        </div>
+        <h4>Modul nachträglich hinzufügen</h4>
+        <p>Du hast beim Bauen ein Modul nicht ausgewählt und willst es jetzt doch noch ergänzen.</p>
+        <pre class="followup-prompt-text" id="fu4">Ergänze meinen bestehenden Study Hub um folgendes zusätzliches Modul: [Modul-Name und kurze Beschreibung, z. B. "Formelkasten: alle Formeln an einem Ort mit Erklärung, wann welche greift"].
+
+Behalte alle bisherigen Module, Inhalte und das Design unverändert bei — das neue Modul soll sich einfügen, nicht ersetzen.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu5">Kopieren</button>
+        </div>
+        <h4>Verstehen, wie der Code funktioniert</h4>
+        <p>Für alle, die dabei auch was über Programmieren/Prompting lernen wollen, statt nur das Ergebnis zu nutzen.</p>
+        <pre class="followup-prompt-text" id="fu5">Erklär mir in einfachen Worten, wie dieser Code aufgebaut ist — welche Teile es gibt (HTML, CSS, JavaScript) und wofür sie jeweils da sind. Ich will grob verstehen, was hier passiert, ohne dass du technisches Vorwissen voraussetzt.
+
+Die Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu6">Kopieren</button>
+        </div>
+        <h4>Allgemeine Anpassung</h4>
+        <p>Ein Alleskönner-Prompt für alles, was in keine der anderen Kategorien passt.</p>
+        <pre class="followup-prompt-text" id="fu6">Ich möchte folgende Änderung an meinem Study Hub: [beschreib genau, was anders sein soll].
+
+Alles andere soll unverändert bleiben — ändere wirklich nur das, worum ich gebeten habe.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+
+      <div class="prompt-card">
+        <div class="prompt-card-head">
+          <button class="copy-btn on-dark followup-copy-btn" data-target="fu7">Kopieren</button>
+        </div>
+        <h4>Überlappende Elemente / unsichtbaren Text beheben</h4>
+        <p>Für Module wie die Themenlandkarte, wenn sich Elemente überlappen oder Beschriftungen fehlen bzw. nicht lesbar sind.</p>
+        <pre class="followup-prompt-text" id="fu7">In meinem Study Hub gibt es ein Darstellungsproblem: [beschreib genau wo — z. B. "in der Themenlandkarte überlappen sich die Knoten" oder "bei den großen/zentralen Elementen ist keine Beschriftung zu sehen"].
+
+Behebe das, indem du:
+- ausreichend Abstand zwischen allen Elementen und Beschriftungen einplanst, sodass nichts mehr überlappt,
+- sicherstellst, dass wirklich jeder Knoten/jedes Element — auch große oder zentrale — sichtbaren, gut lesbaren Text zeigt,
+- im Zweifel ein einfacheres Layout wählst (z. B. Baumstruktur oder Raster statt eines engen, radialen Layouts), wenn das bisherige bei der Menge an Inhalten nicht zuverlässig lesbar bleibt.
+
+Ändere sonst nichts an Design, Struktur oder Inhalt.
+
+Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit hoch.</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="result">
   <div class="section-inner">
     <div class="blueprint-sheet">
@@ -1192,9 +1201,10 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 </div>
 
 <script>
-  // Klick auf "Discendo" (in jeder Nav) bringt immer zurück zur Startseite (Sales-Page)
   document.querySelectorAll('.logo').forEach(logo => {
     logo.addEventListener('click', () => {
+      document.querySelectorAll('.legal-page').forEach(el => { el.style.display = 'none'; });
+      document.getElementById('app').style.display = 'block';
       if(typeof restoreHomeView === 'function') restoreHomeView();
       window.scrollTo({top: 0, behavior: 'smooth'});
     });
