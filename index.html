@@ -497,7 +497,7 @@
     <div class="nav-links">
       <a href="#sales-how">So funktioniert's</a>
       <a href="#sales-pricing">Preis</a>
-      <span class="sales-price-badge"><s style="opacity:.6;">34,99€</s> 24,99€ · einmalig</span>
+      <span class="sales-price-badge"><s style="opacity:.6;">19,99€</s> 9,99€ · einmalig</span>
       <button class="btn btn-primary buy-btn" style="padding:10px 22px;">Jetzt kaufen</button>
     </div>
   </nav>
@@ -507,10 +507,10 @@
       <div class="glow glow-1"></div>
       <div class="glow glow-2"></div>
     </div>
-    <div class="eyebrow">Launch-Angebot: <s style="opacity:.65;">34,99€</s> 24,99€ · kein Abo</div>
+    <div class="eyebrow">Launch-Angebot: <s style="opacity:.65;">19,99€</s> 9,99€ · kein Abo</div>
     <h1>Bau dir deinen<br><span>eigenen Study Hub</span> — für jedes Fach.</h1>
     <p>Kein fertiges Produkt von der Stange. Wähl deinen Studiengang oder dein Schulfach, stell dir aus 15 Modulen deinen eigenen Baukasten zusammen, und bekomm einen fertigen, geprüften Prompt für Claude — statt stundenlang selbst an Formulierungen rumzubasteln.</p>
-    <button class="btn btn-primary buy-btn">Jetzt kaufen — 24,99€ einmalig</button>
+    <button class="btn btn-primary buy-btn">Jetzt kaufen — 9,99€ einmalig</button>
     <div class="sales-trust">
       <span>✓ Einmalzahlung, kein Abo</span>
       <span>✓ Für alle deine Fächer & Semester</span>
@@ -567,8 +567,8 @@
     <div class="section-inner">
       <div class="pricing-card">
         <div class="pricing-eyebrow">🚀 Launch-Angebot · Einmalzahlung</div>
-        <div class="pricing-amount"><s>34,99€</s>24,99€ <span>einmalig</span></div>
-        <p class="pricing-note">Launch-Preis für die ersten Nutzer, solange das Semester läuft — danach steigt der Preis auf 34,99€. Kein Abo, keine versteckten Kosten, keine Folgezahlung.</p>
+        <div class="pricing-amount"><s>19,99€</s>9,99€ <span>einmalig</span></div>
+        <p class="pricing-note">Launch-Preis für die ersten Nutzer, solange das Semester läuft — danach steigt der Preis auf 19,99€. Kein Abo, keine versteckten Kosten, keine Folgezahlung.</p>
         <ul class="pricing-features">
           <li>Zugriff auf alle 15 Lern-Module</li>
           <li>Alle 25 Studiengänge, 17 Schulfächer & 16 Ausbildungsberufe</li>
@@ -576,7 +576,7 @@
           <li>Eingebautes Zusammenfassungs-Tutorial</li>
           <li>Zugriff auf künftige neue Module & Updates</li>
         </ul>
-        <button class="btn btn-primary buy-btn" style="width:100%;">Jetzt kaufen — 24,99€ einmalig</button>
+        <button class="btn btn-primary buy-btn" style="width:100%;">Jetzt kaufen — 9,99€ einmalig</button>
       </div>
     </div>
   </section>
@@ -589,7 +589,7 @@
       </div>
       <div class="faq-item">
         <h4>Ist das wirklich einmalig, oder wird da später ein Abo draus?</h4>
-        <p>Einmalig. Du zahlst einmal 24,99€ (Launch-Preis) und hast dauerhaft Zugriff — kein wiederkehrender Betrag.</p>
+        <p>Einmalig. Du zahlst einmal 9,99€ (Launch-Preis) und hast dauerhaft Zugriff — kein wiederkehrender Betrag.</p>
       </div>
       <div class="faq-item">
         <h4>Brauche ich zusätzlich einen Claude-Account?</h4>
@@ -608,8 +608,8 @@
 
   <section class="final-cta">
     <h2>Bereit für deinen eigenen Study Hub?</h2>
-    <p><s style="opacity:.6;">34,99€</s> 24,99€ Launch-Preis. Kein Abo. Sofortiger Zugriff.</p>
-    <button class="btn btn-primary buy-btn">Jetzt kaufen — 24,99€ einmalig</button>
+    <p><s style="opacity:.6;">19,99€</s> 9,99€ Launch-Preis. Kein Abo. Sofortiger Zugriff.</p>
+    <button class="btn btn-primary buy-btn">Jetzt kaufen — 9,99€ einmalig</button>
   </section>
 
   <footer>
@@ -1367,19 +1367,68 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 
 <script>
   // ==========================================================================
-  // TEMPORÄRER PASSWORT-MODUS — solange Stripe/Digistore24 noch nicht verifiziert ist.
-  // Zugangscode unten ändern, wenn du ihn an bestimmte Leute weitergeben willst.
-  // Sobald echte Zahlung läuft: diesen ganzen Block durch die Checkout-Version
-  // ersetzen (siehe index-live-checkout-BACKUP.html für die fertige Version).
+  // ECHTE ZAHLUNG (Revolut):
+  // Redirect nach Zahlung im Revolut-Dashboard auf https://discendo.de/?paid=1
+  // eingestellt haben, sonst merkt die Seite nicht, dass bezahlt wurde.
   // ==========================================================================
-  const ACCESS_CODE = 'discendo2026'; // TODO: eigenen Code eintragen, falls gewünscht
+  const CHECKOUT_URL = 'https://checkout.revolut.com/pay/c3cf58b7-a30b-4e65-81d4-c93c51f6d088';
 
   document.querySelectorAll('.buy-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.getElementById('passwordError').style.display = 'none';
-      document.getElementById('passwordInput').value = '';
-      document.getElementById('passwordGate').style.display = 'flex';
-      document.getElementById('passwordInput').focus();
+      window.location.href = CHECKOUT_URL;
+    });
+  });
+
+  // Freischaltung NUR wenn die Seite mit ?paid=1 aufgerufen wird — das setzt
+  // Revolut selbst, nachdem die Zahlung wirklich durchgegangen ist.
+  function unlockIfPaid(){
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('paid') === '1'){
+      document.getElementById('salesPage').style.display = 'none';
+      document.getElementById('thankYou').style.display = 'flex';
+    }
+  }
+  unlockIfPaid();
+
+  document.getElementById('useOnlineBtn').addEventListener('click', () => {
+    document.getElementById('thankYou').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'instant'});
+  });
+
+  document.getElementById('downloadToolBtn').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = 'discendo-tool.html';
+    link.download = 'discendo-tool.html';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    document.getElementById('thankYou').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'instant'});
+  });
+
+  // ==========================================================================
+  // EASTER EGG: versteckter Passwort-Zugang, unabhängig vom echten Kauf-Flow.
+  // Auslöser: 5x auf den Footer-Copyright-Text klicken (innerhalb von 3 Sekunden).
+  // Zugangscode unten ändern, wenn du ihn an bestimmte Leute weitergeben willst.
+  // ==========================================================================
+  const ACCESS_CODE = 'discendo2026'; // TODO: eigenen Code eintragen, falls gewünscht
+  let eggClicks = 0, eggTimer = null;
+
+  document.querySelectorAll('footer span:first-child').forEach(el => {
+    el.style.cursor = 'default';
+    el.addEventListener('click', () => {
+      eggClicks++;
+      clearTimeout(eggTimer);
+      eggTimer = setTimeout(() => { eggClicks = 0; }, 3000);
+      if(eggClicks >= 5){
+        eggClicks = 0;
+        document.getElementById('passwordError').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordGate').style.display = 'flex';
+        document.getElementById('passwordInput').focus();
+      }
     });
   });
 
@@ -1388,6 +1437,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     if(val === ACCESS_CODE){
       document.getElementById('passwordGate').style.display = 'none';
       document.getElementById('salesPage').style.display = 'none';
+      document.getElementById('thankYou').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       window.scrollTo({top: 0, behavior: 'instant'});
     } else {
@@ -1407,6 +1457,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   document.querySelectorAll('.logo').forEach(logo => {
     logo.addEventListener('click', () => {
       document.getElementById('app').style.display = 'none';
+      document.getElementById('thankYou').style.display = 'none';
       document.getElementById('salesPage').style.display = '';
       if(typeof restoreHomeView === 'function') restoreHomeView();
       window.scrollTo({top: 0, behavior: 'smooth'});
