@@ -397,53 +397,6 @@
   .legal-back{display:inline-block; margin-bottom:32px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#9FC2FF; text-decoration:none; cursor:pointer;}
   .legal-nav{position:sticky; top:0; z-index:10; padding:18px 48px; background:rgba(10,24,48,.9); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
 
-  @media (max-width:860px){
-    nav{padding:16px 20px;}
-    .nav-links{display:none;}
-    .hero{grid-template-columns:1fr; padding:70px 20px 60px;}
-    .hero h1{font-size:36px;}
-    .hero-visual{width:280px; height:280px;}
-    .hero-visual svg{width:264px; height:264px;}
-    section{padding:64px 20px;}
-    .steps{grid-template-columns:1fr;}
-    .steps-4{grid-template-columns:1fr;}
-    .style-cards{grid-template-columns:1fr;}
-    .thankyou-options{grid-template-columns:1fr;}
-    .prompt-cards-grid{grid-template-columns:1fr;}
-    .builder-grid{grid-template-columns:1fr;}
-    .bom{position:static;}
-    .modules-grid{grid-template-columns:1fr;}
-    .design-grid{grid-template-columns:1fr;}
-    .design-preview-wrap{position:static;}
-    .category-grid{grid-template-columns:1fr;}
-    .program-grid{grid-template-columns:1fr;}
-    .selected-program-bar{flex-direction:column; align-items:flex-start;}
-    .blueprint-sheet{padding:32px 24px;}
-    .sales-hero h1{font-size:34px;}
-    .compare-grid{grid-template-columns:1fr;}
-    .feature-grid{grid-template-columns:1fr;}
-    .pricing-card{padding:32px 24px;}
-    .sales-nav{padding:16px 20px;}
-    .legal-nav{padding:16px 20px;}
-    .sales-hero{padding:60px 20px 56px;}
-    .final-cta{padding:56px 20px;}
-    .password-card{padding:30px 22px;}
-    .thankyou-card{padding:40px 26px;}
-    .pricing-amount{font-size:44px;}
-    .sheet-meta{gap:12px 20px;}
-    .nav-links .sales-price-badge{display:none;}
-  }
-
-  @media (max-width:420px){
-    .hero h1{font-size:30px;}
-    .sales-hero h1{font-size:28px;}
-    .eyebrow{font-size:11px; padding:5px 12px;}
-    .sheet-title{font-size:26px;}
-    .pricing-amount{font-size:38px;}
-    .blueprint-sheet{padding:26px 18px;}
-    .thankyou-card{padding:34px 20px;}
-  }
-
   /* ============ SALES PAGE ============ */
   .sales-nav{
     position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
@@ -610,6 +563,54 @@
   .password-error{color:#E88; font-size:13px; margin-bottom:12px; display:none;}
   .password-actions{display:flex; gap:10px;}
   .password-actions .btn{flex:1;}
+
+  /* ============ MOBILE (ans Ende gestellt, damit gleich-spezifische Regeln oben nicht gewinnen) ============ */
+  @media (max-width:860px){
+    nav{padding:16px 20px;}
+    .nav-links{display:none;}
+    .hero{grid-template-columns:1fr; padding:70px 20px 60px;}
+    .hero h1{font-size:36px;}
+    .hero-visual{width:280px; height:280px;}
+    .hero-visual svg{width:264px; height:264px;}
+    section{padding:64px 20px;}
+    .steps{grid-template-columns:1fr;}
+    .steps-4{grid-template-columns:1fr;}
+    .style-cards{grid-template-columns:1fr;}
+    .thankyou-options{grid-template-columns:1fr;}
+    .prompt-cards-grid{grid-template-columns:1fr;}
+    .builder-grid{grid-template-columns:1fr;}
+    .bom{position:static;}
+    .modules-grid{grid-template-columns:1fr;}
+    .design-grid{grid-template-columns:1fr;}
+    .design-preview-wrap{position:static;}
+    .category-grid{grid-template-columns:1fr;}
+    .program-grid{grid-template-columns:1fr;}
+    .selected-program-bar{flex-direction:column; align-items:flex-start;}
+    .blueprint-sheet{padding:32px 24px;}
+    .sales-hero h1{font-size:34px;}
+    .compare-grid{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:1fr;}
+    .pricing-card{padding:32px 24px;}
+    .sales-nav{padding:16px 20px;}
+    .legal-nav{padding:16px 20px;}
+    .sales-hero{padding:60px 20px 56px;}
+    .final-cta{padding:56px 20px;}
+    .password-card{padding:30px 22px;}
+    .thankyou-card{padding:40px 26px;}
+    .pricing-amount{font-size:44px;}
+    .sheet-meta{gap:12px 20px;}
+    .nav-links .sales-price-badge{display:none;}
+  }
+
+  @media (max-width:420px){
+    .hero h1{font-size:30px;}
+    .sales-hero h1{font-size:28px;}
+    .eyebrow{font-size:11px; padding:5px 12px;}
+    .sheet-title{font-size:26px;}
+    .pricing-amount{font-size:38px;}
+    .blueprint-sheet{padding:26px 18px;}
+    .thankyou-card{padding:34px 20px;}
+  }
 </style>
 </head>
 <body>
