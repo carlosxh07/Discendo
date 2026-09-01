@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discendo — Demo Study Hub (alle 14 Module)</title>
+<style>
+  :root{
+    --blue:#2F6FE0;
+    --blue-light:#5C90F2;
+    --blue-dim:rgba(47,111,224,.16);
+    --black:#1A1A1A;
+    --bg:#121317;
+    --bg-2:#17181D;
+    --panel:#1C1D24;
+    --panel-2:#22232B;
+    --border:rgba(255,255,255,.08);
+    --border-soft:rgba(255,255,255,.05);
+    --text:#F2F3F7;
+    --text-dim:#B4B7C4;
+    --text-faint:#7B7E8C;
+    --good:#38B26B;
+    --bad:#E0533E;
+    --radius-xl:26px;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --shadow-sm:0 4px 14px rgba(0,0,0,.28);
+    --glow-blue:0 0 0 3px rgba(47,111,224,.22);
+    --font: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{scrollbar-color: #3a3c47 var(--bg-2); scrollbar-width:thin;}
+  ::-webkit-scrollbar{width:10px; height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg-2);}
+  ::-webkit-scrollbar-thumb{background:#34363f; border-radius:8px; border:2px solid var(--bg-2);}
+  ::-webkit-scrollbar-thumb:hover{background:#3f424d;}
+  body{
+    background:radial-gradient(1200px 800px at 15% -10%, #1a2440 0%, transparent 60%), var(--bg);
+    color:var(--text);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:var(--blue); color:#fff;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Info bar ---------- */
+  .infobar{
+    display:flex; align-items:center; gap:12px;
+    background:linear-gradient(90deg, var(--blue-dim), rgba(47,111,224,.03));
+    border-bottom:1px solid var(--border);
+    padding:12px 22px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    position:relative; z-index:5;
+  }
+  .infobar .dot{
+    flex:0 0 auto; width:22px; height:22px; border-radius:50%;
+    background:linear-gradient(150deg, var(--blue-light), var(--blue));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; box-shadow:0 2px 8px rgba(47,111,224,.4);
+  }
+  .infobar strong{color:var(--text); font-weight:600;}
+
+  /* ---------- Layout ---------- */
+  .app{
+    display:flex;
+    min-height:calc(100vh - 46px);
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:300px; flex:0 0 300px;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:22px 14px 22px;
+    display:flex; flex-direction:column; gap:18px;
+    position:sticky; top:0; align-self:flex-start;
+    height:calc(100vh - 46px);
+    overflow-y:auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    padding:4px 10px 14px;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .brand .mark{
+    width:36px; height:36px; border-radius:var(--radius-sm);
+    background:linear-gradient(135deg, var(--blue), #1c4fb0);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:16px; color:#fff;
+    box-shadow:0 4px 14px rgba(47,111,224,.35);
+  }
+  .brand .name{font-weight:700; font-size:16.5px; letter-spacing:.2px;}
+  .brand .tag{font-size:11.5px; color:var(--text-faint); margin-top:1px;}
+
+  .dashboard-btn{margin-bottom:2px;}
+  .dashboard-btn .home-icon{color:var(--text-faint); display:flex; align-items:center; justify-content:center;}
+  .dashboard-btn.active .home-icon{color:#fff;}
+  .nav-divider{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; font-weight:700;
+    color:var(--text-faint); padding:10px 12px 4px;
+  }
+  .navlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px;}
+  .navlist li{}
+  .navbtn{
+    width:100%; text-align:left; display:flex; align-items:center; gap:11px;
+    background:transparent; border:1px solid transparent; color:var(--text-dim);
+    padding:10px 12px; border-radius:var(--radius-md); cursor:pointer;
+    font-size:13.4px; position:relative; transition:background .15s, color .15s, border-color .15s;
+  }
+  .navbtn::before{
+    content:""; position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:3px; height:0; border-radius:0 3px 3px 0; background:var(--blue); transition:height .15s;
+  }
+  .navbtn:hover{background:var(--panel); color:var(--text);}
+  .navbtn.active{
+    background:linear-gradient(90deg, var(--blue-dim), rgba(47,111,224,.05)); color:var(--text); border-color:rgba(47,111,224,.35);
+  }
+  .navbtn.active::before{height:20px;}
+  .navbtn .num{
+    flex:0 0 auto; width:24px; height:24px; border-radius:8px;
+    background:var(--panel-2); color:var(--text-faint);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; transition:background .15s, color .15s;
+  }
+  .navbtn.active .num{background:var(--blue); color:#fff; box-shadow:0 2px 8px rgba(47,111,224,.45);}
+  .navbtn .labelwrap{display:flex; flex-direction:column; gap:1px; min-width:0;}
+  .navbtn .lbl{font-weight:600; color:inherit; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .navbtn .sub{font-size:10.8px; color:var(--text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  /* ---------- Main ---------- */
+  .main{flex:1; min-width:0; padding:30px 40px 70px;}
+  .module{display:none; animation:fadein .25s ease;}
+  .module.active{display:block;}
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+  .module-head{margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid var(--border-soft);}
+  .module-head .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.09em;
+    color:var(--blue-light); font-weight:700; margin-bottom:10px;
+  }
+  .module-head .eyebrow .pill{
+    background:var(--blue-dim); border:1px solid rgba(47,111,224,.35);
+    padding:3px 10px; border-radius:999px; color:var(--text-dim); font-weight:600; letter-spacing:0;
+    text-transform:none; font-size:11.5px;
+  }
+  .module-head h1{font-size:27px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em;}
+  .module-head p{margin:0; color:var(--text-dim); font-size:14px; max-width:720px; line-height:1.6;}
+
+  .card{
+    background:linear-gradient(175deg, var(--panel), var(--panel) 60%, #1a1b21);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg); padding:22px 24px; box-shadow:var(--shadow);
+    position:relative;
+  }
+  .grid{display:grid; gap:16px;}
+  .g2{grid-template-columns:1fr 1fr;}
+  @media(max-width:900px){.g2{grid-template-columns:1fr;}}
+
+  /* generic small helpers */
+  .btn{
+    background:linear-gradient(160deg, var(--blue-light), var(--blue));
+    color:#fff; border:none; padding:10px 18px;
+    border-radius:var(--radius-md); font-size:13.5px; font-weight:700; cursor:pointer;
+    box-shadow:0 3px 12px rgba(47,111,224,.32);
+    transition:filter .15s, transform .1s, box-shadow .15s;
+  }
+  .btn:hover{filter:brightness(1.08); box-shadow:0 4px 16px rgba(47,111,224,.42);}
+  .btn:active{transform:scale(.97);}
+  .btn:focus-visible{outline:none; box-shadow:var(--glow-blue), 0 3px 12px rgba(47,111,224,.32);}
+  .btn.ghost{background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim); box-shadow:none;}
+  .btn.ghost:hover{color:var(--text); border-color:var(--blue-light); filter:none;}
+  .btn.small{padding:7px 13px; font-size:12.5px; border-radius:var(--radius-sm);}
+  .btn:disabled{opacity:.4; cursor:not-allowed; filter:none; transform:none;}
+
+  .badge{display:inline-block; padding:4px 11px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.02em;}
+  .badge.good{background:rgba(56,178,107,.15); color:#5CD68A; border:1px solid rgba(56,178,107,.35);}
+  .badge.bad{background:rgba(224,83,62,.15); color:#F0806E; border:1px solid rgba(224,83,62,.35);}
+  .badge.neutral{background:var(--panel-2); color:var(--text-dim); border:1px solid var(--border);}
+
+  /* ===== Dashboard ===== */
+  .dash-hero{
+    position:relative; overflow:hidden;
+    background:linear-gradient(150deg, #1b2a52 0%, var(--panel) 55%, var(--panel) 100%);
+    border:1px solid var(--border); border-radius:var(--radius-xl);
+    padding:38px 40px; margin-bottom:30px; box-shadow:var(--shadow);
+  }
+  .dash-hero::after{
+    content:""; position:absolute; top:-60px; right:-60px; width:280px; height:280px;
+    background:radial-gradient(circle, rgba(47,111,224,.35), transparent 70%);
+    pointer-events:none;
+  }
+  .dash-hero-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+    color:var(--blue-light); font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:5px 12px; border-radius:999px; margin-bottom:16px; position:relative;
+  }
+  .dash-hero h1{font-size:32px; font-weight:800; margin:0 0 12px; letter-spacing:-.015em; max-width:620px; position:relative;}
+  .dash-hero p{font-size:14.5px; color:var(--text-dim); line-height:1.65; max-width:600px; margin:0 0 26px; position:relative;}
+  .dash-stats{display:flex; gap:34px; flex-wrap:wrap; position:relative;}
+  .dash-stat-num{font-size:28px; font-weight:800; color:var(--text); line-height:1;}
+  .dash-stat-lbl{font-size:12px; color:var(--text-faint); margin-top:5px; font-weight:600;}
+
+  .dash-section-label{
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:700;
+    color:var(--text-faint); margin-bottom:14px;
+  }
+  .dash-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:16px;}
+  .dash-card{
+    background:linear-gradient(175deg, var(--panel), #1a1b21);
+    border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:20px; cursor:pointer; transition:transform .18s, border-color .18s, box-shadow .18s;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .dash-card:hover{transform:translateY(-3px); border-color:rgba(47,111,224,.45); box-shadow:0 12px 28px rgba(0,0,0,.4);}
+  .dash-card-top{display:flex; align-items:center; justify-content:space-between;}
+  .dash-card-icon{
+    width:34px; height:34px; border-radius:10px; flex:0 0 auto;
+    background:linear-gradient(150deg, var(--blue-light), var(--blue)); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(47,111,224,.35);
+  }
+  .dash-card-icon svg{width:18px; height:18px;}
+  .dash-card-modnum{font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint);}
+  .dash-card-title{font-size:15.5px; font-weight:700; color:var(--text);}
+  .dash-card-desc{font-size:12.8px; color:var(--text-dim); line-height:1.5; flex:1;}
+  .dash-card-cta{
+    font-size:12px; font-weight:700; color:var(--blue-light);
+    display:flex; align-items:center; gap:5px; margin-top:4px;
+  }
+  .dash-card-cta .arrow{transition:transform .15s;}
+  .dash-card:hover .dash-card-cta .arrow{transform:translateX(3px);}
+  .dash-card:focus-visible{outline:none; box-shadow:var(--glow-blue); border-color:var(--blue-light);}
+
+  /* ===== Module 1: Zusammenfassungen (Accordion) ===== */
+  .acc-item{border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:10px; overflow:hidden; background:var(--panel-2); transition:border-color .15s;}
+  .acc-item.open{border-color:rgba(47,111,224,.4);}
+  .acc-head{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; gap:10px; transition:background .15s;}
+  .acc-head:hover{background:rgba(255,255,255,.02);}
+  .acc-head .art{font-weight:700; color:var(--blue-light); font-size:13px; flex:0 0 auto; min-width:64px;}
+  .acc-head .title{font-weight:600; font-size:14px; flex:1;}
+  .acc-head .chev{transition:transform .2s; color:var(--text-faint); flex:0 0 auto;}
+  .acc-item.open .chev{transform:rotate(180deg); color:var(--blue-light);}
+  .acc-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .acc-item.open .acc-body{max-height:600px;}
+  .acc-body-inner{padding:0 18px 18px; font-size:13.5px; color:var(--text-dim); line-height:1.6;}
+  .schema-box{margin-top:10px; background:var(--bg-2); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:10px 14px; font-size:12.5px; line-height:1.55;}
+  .schema-box b{color:var(--text);}
+
+  /* ===== Module 2: Flashcards ===== */
+  .fc-wrap{display:flex; flex-direction:column; align-items:center; gap:18px;}
+  .fc-card{
+    width:100%; max-width:480px; height:240px; perspective:1400px; cursor:pointer;
+  }
+  .fc-inner{position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d;}
+  .fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:var(--radius-lg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    padding:30px 30px 52px; box-shadow:var(--shadow);
+  }
+  .fc-text{
+    text-align:center; max-height:100%; overflow-y:auto; overflow-x:hidden;
+    padding-right:2px; scrollbar-width:thin;
+  }
+  .fc-front{background:linear-gradient(160deg, var(--panel-2), var(--panel)); color:var(--text);}
+  .fc-front .fc-text{font-size:19px; font-weight:700; line-height:1.4;}
+  .fc-back{background:linear-gradient(155deg, #2a5bc4, #2F6FE0 55%, #3a7bf0); transform:rotateY(180deg);}
+  .fc-back .fc-text{font-size:14.5px; font-weight:500; line-height:1.62; color:#F3F6FF;}
+  .fc-hint{
+    position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+    font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    padding:6px 14px; border-radius:999px; white-space:nowrap; pointer-events:none;
+  }
+  .fc-front .fc-hint{color:var(--text-faint); background:rgba(255,255,255,.05); border:1px solid var(--border);}
+  .fc-back .fc-hint{color:rgba(255,255,255,.95); background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.18);}
+  .fc-controls{display:flex; align-items:center; gap:16px;}
+  .fc-counter{font-size:12.5px; color:var(--text-faint); min-width:50px; text-align:center; font-weight:600;}
+
+  /* ===== Module 3: Quiz ===== */
+  .quiz-q{font-size:15px; font-weight:600; margin-bottom:14px;}
+  .quiz-opts{display:flex; flex-direction:column; gap:9px; margin-bottom:14px;}
+  .quiz-opt{
+    text-align:left; background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:11px 14px; border-radius:var(--radius-md); cursor:pointer; font-size:13.5px;
+    transition:border-color .15s, background .15s;
+  }
+  .quiz-opt:hover{border-color:var(--blue-light);}
+  .quiz-opt.correct{background:rgba(56,178,107,.15); border-color:var(--good); color:#BFF2D3;}
+  .quiz-opt.wrong{background:rgba(224,83,62,.15); border-color:var(--bad); color:#F5C4BB;}
+  .quiz-opt[disabled]{cursor:default;}
+  .quiz-explain{font-size:12.8px; color:var(--text-dim); background:var(--bg-2); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:14px; display:none;}
+  .quiz-explain.show{display:block;}
+  .quiz-progress{display:flex; gap:6px; margin-bottom:16px;}
+  .quiz-progress span{flex:1; height:5px; border-radius:4px; background:var(--panel-2);}
+  .quiz-progress span.done{background:var(--blue);}
+  .quiz-result{text-align:center; padding:20px 0;}
+  .quiz-result .score{font-size:38px; font-weight:800; margin-bottom:4px;}
+
+  /* ===== Module 4: Zuordnungsspiel ===== */
+  .match-wrap{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  @media(max-width:700px){.match-wrap{grid-template-columns:1fr;}}
+  .match-col-title{font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin-bottom:10px; font-weight:700;}
+  .match-item{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:11px 14px; margin-bottom:8px; cursor:pointer; font-size:13.5px; transition:all .15s;
+  }
+  .match-item:hover{border-color:var(--blue-light);}
+  .match-item.selected{border-color:var(--blue); background:var(--blue-dim); box-shadow:var(--glow-blue);}
+  .match-item.matched{border-color:var(--good); background:rgba(56,178,107,.12); color:var(--text-faint); cursor:default;}
+  .match-item.shake{border-color:var(--bad); background:rgba(224,83,62,.12);}
+  .match-status{margin-top:14px; font-size:12.5px; color:var(--text-faint); font-weight:600;}
+
+  /* ===== Module 5: Radar ===== */
+  .radar-wrap{display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;}
+  .radar-list{flex:1; min-width:220px;}
+  .radar-list .ritem{display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-soft); font-size:13px;}
+  .radar-list .rbar{flex:1; height:6px; background:var(--panel-2); border-radius:4px; margin:0 12px; overflow:hidden;}
+  .radar-list .rbar i{display:block; height:100%; border-radius:4px; transition:width .6s ease;}
+  .radar-list .rval{font-size:12px; color:var(--text-faint); width:34px; text-align:right; font-weight:600;}
+  .reco{margin-top:16px; background:var(--bg-2); border-left:3px solid var(--blue); border-radius:var(--radius-sm); padding:12px 14px; font-size:13px; color:var(--text-dim); line-height:1.55;}
+
+  /* ===== Module 6: Formelkasten ===== */
+  .tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .tab{padding:8px 15px; border-radius:999px; background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim); font-size:12.8px; cursor:pointer; font-weight:600; transition:all .15s;}
+  .tab:hover{border-color:var(--blue-light); color:var(--text);}
+  .tab.active{background:linear-gradient(150deg, var(--blue-light), var(--blue)); color:#fff; border-color:var(--blue); box-shadow:0 3px 10px rgba(47,111,224,.35);}
+  .formula-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px;}
+  .fcard{background:var(--panel-2); border:1px solid var(--border); border-top:2px solid rgba(47,111,224,.45); border-radius:var(--radius-md); padding:16px; display:none; transition:transform .15s, border-color .15s;}
+  .fcard:hover{transform:translateY(-2px); border-top-color:var(--blue-light);}
+  .fcard.show{display:block;}
+  .fcard .eq{font-size:20px; font-weight:800; color:var(--blue-light); margin-bottom:8px;}
+  .fcard .name{font-size:13px; font-weight:700; margin-bottom:5px;}
+  .fcard .vars{font-size:11.8px; color:var(--text-faint); line-height:1.5;}
+
+  /* ===== Module 7: Altklausuren-Simulator ===== */
+  .timer-bar{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .timer-track{flex:1; height:8px; background:var(--panel-2); border-radius:4px; overflow:hidden;}
+  .timer-fill{height:100%; background:linear-gradient(90deg, var(--blue), var(--blue-light)); width:100%; transition:width 1s linear;}
+  .timer-num{font-size:13px; font-weight:700; color:var(--text-dim); width:44px; text-align:right;}
+
+  /* ===== Module 9: Fallbeispiel ===== */
+  .case-step{background:var(--panel-2); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:12px;}
+  .case-step .k{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--blue-light); font-weight:700; margin-bottom:6px;}
+  .case-choices{display:flex; flex-direction:column; gap:8px; margin-top:10px;}
+
+  /* ===== Module 10: Experiment-Trainer ===== */
+  .calc-row{display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+  .calc-row label{font-size:13px; color:var(--text-dim); flex:0 0 210px;}
+  .calc-row input{
+    background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:9px 12px; color:var(--text); font-size:13.5px; width:140px;
+    outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  .calc-row input:focus{border-color:var(--blue-light); box-shadow:var(--glow-blue);}
+  .calc-steps{background:var(--bg-2); border-radius:var(--radius-md); padding:14px 16px; font-size:13px; color:var(--text-dim); line-height:1.7; margin-top:14px; display:none;}
+  .calc-steps.show{display:block;}
+  .calc-steps b{color:var(--text);}
+
+  /* ===== Module 11: Unterrichtsentwurf ===== */
+  .phase-tabs{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .phase-panel{display:none; font-size:13.5px; color:var(--text-dim); line-height:1.65;}
+  .phase-panel.show{display:block;}
+  .lp-table{width:100%; border-collapse:collapse; font-size:12.8px; margin-top:10px; border-radius:var(--radius-sm); overflow:hidden;}
+  .lp-table th, .lp-table td{border:1px solid var(--border); padding:9px 12px; text-align:left; color:var(--text-dim);}
+  .lp-table th{background:var(--panel-2); color:var(--text); font-weight:700;}
+  .lp-table tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+
+  /* ===== Module 12: Glossar ===== */
+  .search-input{
+    width:100%; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:11px 15px; color:var(--text); font-size:13.5px; margin-bottom:16px;
+    outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  .search-input:focus{border-color:var(--blue-light); box-shadow:var(--glow-blue);}
+  .search-input::placeholder{color:var(--text-faint);}
+  .glossary-item{border-bottom:1px solid var(--border-soft); padding:12px 2px;}
+  .glossary-item .term{font-weight:700; font-size:13.8px; margin-bottom:3px;}
+  .glossary-item .def{font-size:13px; color:var(--text-dim); line-height:1.5;}
+
+  /* ===== Module 13: Themenlandkarte ===== */
+  .map-svg-wrap{width:100%; overflow-x:auto;}
+
+  /* ===== Module 14: Wiederholungsplan ===== */
+  .plan-progress-wrap{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .plan-progress-track{flex:1; height:9px; background:var(--panel-2); border-radius:5px; overflow:hidden;}
+  .plan-progress-fill{height:100%; background:linear-gradient(90deg, var(--blue), var(--blue-light)); width:0%; transition:width .3s;}
+  .plan-day{display:flex; align-items:flex-start; gap:12px; padding:12px 8px; border-bottom:1px solid var(--border-soft); border-radius:var(--radius-sm); transition:background .15s;}
+  .plan-day:hover{background:rgba(255,255,255,.02);}
+  .plan-day input{margin-top:3px; width:17px; height:17px; accent-color:var(--blue); cursor:pointer;}
+  .plan-day .d{font-size:11px; color:var(--blue-light); font-weight:700; text-transform:uppercase; letter-spacing:.06em;}
+  .plan-day .t{font-size:13.8px; font-weight:600; margin:2px 0 2px;}
+  .plan-day .s{font-size:12.5px; color:var(--text-faint);}
+  .plan-day.done .t{text-decoration:line-through; color:var(--text-faint);}
+
+  /* ===== Module 15: Mündliche Prüfung ===== */
+  .oral-card{background:linear-gradient(175deg, var(--panel-2), var(--panel)); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; text-align:left;}
+  .oral-q{font-size:16px; font-weight:700; margin-bottom:14px; line-height:1.45;}
+  .oral-answer{display:none; font-size:13.6px; color:var(--text-dim); line-height:1.62; background:var(--bg-2); border-left:3px solid var(--blue); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:14px;}
+  .oral-answer.show{display:block;}
+  .self-rate{display:flex; gap:8px;}
+  .self-rate button{flex:1;}
+
+  footer.mod-footer{margin-top:26px; font-size:11.5px; color:var(--text-faint); text-align:center;}
+
+  @media(max-width:820px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%; flex:none; height:auto; position:relative; flex-direction:row; overflow-x:auto; padding:14px;}
+    .brand{display:none;}
+    .navlist{flex-direction:row;}
+    .navbtn .sub{display:none;}
+    .main{padding:22px 18px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="infobar">
+  <div class="dot">i</div>
+  <div>Dies ist ein <strong>Demo-Hub mit Beispielinhalten aus verschiedenen Fächern</strong> — dein eigener Study Hub bezieht sich natürlich nur auf dein eigenes Fach.</div>
+</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">D</div>
+      <div>
+        <div class="name">Discendo</div>
+        <div class="tag">Demo Study Hub — 14 Module</div>
+      </div>
+    </div>
+    <button class="navbtn dashboard-btn" id="dashboardNavBtn" data-id="dashboard">
+      <span class="num home-icon">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5 10V19C5 19.5523 5.44772 20 6 20H9V15C9 14.4477 9.44772 14 10 14H14C14.5523 14 15 14.4477 15 15V20H18C18.5523 20 19 19.5523 19 19V10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="labelwrap"><span class="lbl">Übersicht</span><span class="sub">Alle Module</span></span>
+    </button>
+    <div class="nav-divider">Module</div>
+    <ul class="navlist" id="navlist"></ul>
+  </aside>
+
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* ============================================================
+   MODULE REGISTRY — used to build sidebar nav
+   ============================================================ */
+const MODULES = [
+  {id:"m1",  num:1,  label:"Zusammenfassungen",      sub:"Jura",        desc:"Kompakte Zusammenfassung inkl. Definitionen &amp; Prüfungsschema."},
+  {id:"m2",  num:2,  label:"Flashcards",              sub:"Biologie",    desc:"Karteikarten zum Umdrehen — ideal zum schnellen Wiederholen."},
+  {id:"m3",  num:3,  label:"Quiz",                    sub:"BWL",         desc:"Interaktives Quiz mit sofortigem, ehrlichem Feedback."},
+  {id:"m4",  num:4,  label:"Zuordnungsspiel",         sub:"Geschichte",  desc:"Begriffe und Jahreszahlen spielerisch zuordnen."},
+  {id:"m5",  num:5,  label:"Schwachstellen-Radar",    sub:"Mathematik",  desc:"Zeigt automatisch, wo noch Lücken bestehen."},
+  {id:"m6",  num:6,  label:"Formelkasten",            sub:"Physik",      desc:"Alle Formeln griffbereit, nach Kategorie filterbar."},
+  {id:"m7",  num:7,  label:"Altklausuren-Simulator",  sub:"VWL",         desc:"Original-Klausuraufgaben unter echtem Zeitdruck."},
+  {id:"m9",  num:8,  label:"Fallbeispiel-Simulator",  sub:"Medizin",     desc:"Entscheidungen treffen wie am Patientenbett."},
+  {id:"m10", num:9,  label:"Experiment-Trainer",      sub:"Chemie",      desc:"Berechnungen live eingeben und Lösungsweg sehen."},
+  {id:"m11", num:10, label:"Unterrichtsentwurf",      sub:"Lehramt",     desc:"Fertiger Bausteinplan nach Unterrichtsphasen."},
+  {id:"m12", num:11, label:"Begriffs-Glossar",        sub:"Psychologie", desc:"Durchsuchbares Lexikon aller Fachbegriffe."},
+  {id:"m13", num:12, label:"Themenlandkarte",         sub:"Geschichte",  desc:"Zusammenhänge auf einen Blick erschließen."},
+  {id:"m14", num:13, label:"Wiederholungsplan",       sub:"Beispiel-Plan", desc:"Tagesgenauer Lernplan zum Abhaken."},
+  {id:"m15", num:14, label:"Mündl.-Prüfung-Trainer",  sub:"Germanistik", desc:"Fragen laut üben, Musterantwort einblenden."},
+];
+
+const navlistEl = document.getElementById('navlist');
+MODULES.forEach(m=>{
+  const li = document.createElement('li');
+  li.innerHTML = `<button class="navbtn" data-id="${m.id}">
+      <span class="num">${m.num}</span>
+      <span class="labelwrap"><span class="lbl">${m.label}</span><span class="sub">${m.sub}</span></span>
+    </button>`;
+  navlistEl.appendChild(li);
+});
+
+document.getElementById('dashboardNavBtn').addEventListener('click', ()=> showModule('dashboard'));
+
+function showModule(id){
+  document.querySelectorAll('.module').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.navbtn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`.navbtn[data-id="${id}"]`).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+  document.querySelector('.main').scrollTop = 0;
+}
+navlistEl.addEventListener('click', e=>{
+  const btn = e.target.closest('.navbtn');
+  if(btn) showModule(btn.dataset.id);
+});
+</script>
+
+<!-- ============================================================
+     MODULE CONTENT — injected into #main
+     ============================================================ -->
+<script>
+const mainEl = document.getElementById('main');
+mainEl.innerHTML = `
+
+<!-- ============ DASHBOARD — Startseite ============ -->
+<section class="module active" id="dashboard">
+  <div class="dash-hero">
+    <div class="dash-hero-badge">Discendo Demo-Hub</div>
+    <h1>Willkommen in deinem persönlichen Study Hub</h1>
+    <p>Dieser Demo-Hub zeigt dir anhand von 14 Beispiel-Modulen aus verschiedenen Fächern, wie dein eigener Study Hub aussehen und funktionieren kann. Klicke unten auf ein Modul oder nutze die Navigation links.</p>
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-num">14</div><div class="dash-stat-lbl">Module</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">12</div><div class="dash-stat-lbl">Fachbereiche</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">1</div><div class="dash-stat-lbl">Datei, offline nutzbar</div></div>
+    </div>
+  </div>
+  <div class="dash-section-label">Alle Module im Überblick</div>
+  <div class="dash-grid" id="dashGrid"></div>
+</section>
+
+<!-- ============ MODULE 1 — Zusammenfassungen: Jura ============ -->
+<section class="module" id="m1">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 1</span> Zusammenfassungen</div>
+    <h1>Die Grundrechte im Grundgesetz (Art. 1–19 GG)</h1>
+    <p>Kompakte, klickbare Zusammenfassung zentraler Grundrechte inkl. Definitionen und Prüfungsschema — automatisch aus deinen Unterlagen generiert.</p>
+  </div>
+  <div class="card">
+    <div id="acc"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 2 — Flashcards: Biologie ============ -->
+<section class="module" id="m2">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 2</span> Flashcards</div>
+    <h1>Zellbiologie — Zellorganellen &amp; ihre Funktion</h1>
+    <p>Karte antippen zum Umdrehen. Mit Pfeilen durch das Deck blättern.</p>
+  </div>
+  <div class="card fc-wrap">
+    <div class="fc-card" id="fcCard">
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-text" id="fcFront"></div>
+          <div class="fc-hint">Tippen zum Umdrehen</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-text" id="fcBack"></div>
+          <div class="fc-hint">Tippen zum Zurückdrehen</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="btn ghost small" id="fcPrev">← Zurück</button>
+      <div class="fc-counter" id="fcCounter">1 / 8</div>
+      <button class="btn ghost small" id="fcNext">Weiter →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 3 — Quiz: BWL ============ -->
+<section class="module" id="m3">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 3</span> Quiz</div>
+    <h1>BWL — Kostenrechnung</h1>
+    <p>Fixkosten, variable Kosten &amp; Deckungsbeitrag. Bewertung erfolgt streng — wie in der echten Klausur.</p>
+  </div>
+  <div class="card" id="quizCard"></div>
+</section>
+
+<!-- ============ MODULE 4 — Zuordnungsspiel: Geschichte ============ -->
+<section class="module" id="m4">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 4</span> Zuordnungsspiel</div>
+    <h1>Geschichte — Ereignisse des 20. Jahrhunderts</h1>
+    <p>Ordne jedes Ereignis der richtigen Jahreszahl zu. Erst Ereignis, dann Jahr anklicken.</p>
+  </div>
+  <div class="card">
+    <div class="match-wrap">
+      <div>
+        <div class="match-col-title">Ereignis</div>
+        <div id="matchEvents"></div>
+      </div>
+      <div>
+        <div class="match-col-title">Jahreszahl</div>
+        <div id="matchYears"></div>
+      </div>
+    </div>
+    <div class="match-status" id="matchStatus">0 von 6 Paaren gefunden</div>
+  </div>
+</section>
+
+<!-- ============ MODULE 5 — Schwachstellen-Radar: Mathematik ============ -->
+<section class="module" id="m5">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 5</span> Schwachstellen-Radar</div>
+    <h1>Mathematik — Ableitungsregeln</h1>
+    <p>Discendo wertet deine bisherigen Übungsaufgaben aus und zeigt, wo noch Lücken bestehen.</p>
+  </div>
+  <div class="card radar-wrap">
+    <div id="radarSvgWrap"></div>
+    <div class="radar-list">
+      <div id="radarList"></div>
+      <div class="reco" id="radarReco"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 6 — Formelkasten: Physik ============ -->
+<section class="module" id="m6">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 6</span> Formelkasten</div>
+    <h1>Physik — Mechanik-Formeln</h1>
+    <p>Alle wichtigen Formeln griffbereit, nach Kategorie filterbar.</p>
+  </div>
+  <div class="card">
+    <div class="tabs" id="formTabs"></div>
+    <div class="formula-grid" id="formGrid"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 7 — Altklausuren-Simulator: VWL ============ -->
+<section class="module" id="m7">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 7</span> Altklausuren-Simulator</div>
+    <h1>VWL — Mikroökonomie (Angebot &amp; Nachfrage)</h1>
+    <p>Original-Klausuraufgaben unter Zeitdruck — realistische Prüfungssimulation.</p>
+  </div>
+  <div class="card" id="examCard"></div>
+</section>
+
+<!-- ============ MODULE 9 — Fallbeispiel-Simulator: Medizin ============ -->
+<section class="module" id="m9">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 8</span> Fallbeispiel-Simulator</div>
+    <h1>Medizin — Differentialdiagnose bei akuten Bauchschmerzen</h1>
+    <p>Triff Entscheidungen wie am Patientenbett — Discendo begleitet dich durch den Fall.</p>
+  </div>
+  <div class="card" id="caseCard"></div>
+</section>
+
+<!-- ============ MODULE 10 — Experiment-Trainer: Chemie ============ -->
+<section class="module" id="m10">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 9</span> Experiment-Trainer</div>
+    <h1>Chemie — Stöchiometrische Berechnungen</h1>
+    <p>Reaktionsgleichung: 2 Mg + O₂ → 2 MgO. Gib die Einwaage ein und lass dir den Lösungsweg zeigen.</p>
+  </div>
+  <div class="card">
+    <div class="calc-row">
+      <label>Masse Magnesium (g)</label>
+      <input type="number" id="mgInput" placeholder="z. B. 4.86" step="0.01">
+    </div>
+    <button class="btn" id="calcBtn">Berechnen</button>
+    <div class="calc-steps" id="calcSteps"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 11 — Unterrichtsentwurf-Baustein: Lehramt ============ -->
+<section class="module" id="m11">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 10</span> Unterrichtsentwurf-Baustein</div>
+    <h1>Lehramt — Unterrichtsplanung: Einmaleins (3. Klasse)</h1>
+    <p>Fertiger Bausteinplan nach Unterrichtsphasen, direkt einsetzbar für dein Praktikum oder Referendariat.</p>
+  </div>
+  <div class="card">
+    <div class="phase-tabs" id="phaseTabs"></div>
+    <div id="phasePanels"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 12 — Begriffs-Glossar: Psychologie ============ -->
+<section class="module" id="m12">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 11</span> Begriffs-Glossar</div>
+    <h1>Psychologie — Grundbegriffe der Entwicklungspsychologie</h1>
+    <p>Durchsuchbares Glossar aller klausurrelevanten Fachbegriffe.</p>
+  </div>
+  <div class="card">
+    <input class="search-input" id="glossSearch" placeholder="Begriff suchen, z. B. „Bindung“ …">
+    <div id="glossList"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 13 — Themenlandkarte: Geschichte ============ -->
+<section class="module" id="m13">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 12</span> Themenlandkarte</div>
+    <h1>Geschichte — Ursachen des Ersten Weltkriegs</h1>
+    <p>Visuelle Übersicht der Zusammenhänge zwischen den zentralen Ursachen.</p>
+  </div>
+  <div class="card map-svg-wrap" id="mapSvgWrap"></div>
+</section>
+
+<!-- ============ MODULE 14 — Wiederholungsplan ============ -->
+<section class="module" id="m14">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 13</span> Wiederholungsplan</div>
+    <h1>Beispiel: 10-Tage-Plan vor der Mathe-Klausur</h1>
+    <p>Automatisch generierter Lernplan mit Tagesaufgaben. Erledigtes einfach abhaken.</p>
+  </div>
+  <div class="card">
+    <div class="plan-progress-wrap">
+      <div class="plan-progress-track"><div class="plan-progress-fill" id="planFill"></div></div>
+      <div id="planPct" style="font-size:12.5px;color:var(--text-faint);min-width:36px;text-align:right;">0%</div>
+    </div>
+    <div id="planList"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 15 — Mündliche-Prüfung-Trainer ============ -->
+<section class="module" id="m15">
+  <div class="module-head">
+    <div class="eyebrow"><span class="pill">Modul 14</span> Mündliche-Prüfung-Trainer</div>
+    <h1>Germanistik — Mündliche Prüfung zu Goethes „Faust“</h1>
+    <p>Typische Prüfungsfragen laut vorlesen oder beantworten, dann Musterantwort einblenden und dich selbst einschätzen.</p>
+  </div>
+  <div class="card oral-card">
+    <div class="oral-q" id="oralQ"></div>
+    <div class="oral-answer" id="oralA"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn" id="oralReveal">Antwort anzeigen</button>
+      <button class="btn ghost" id="oralNext">Nächste Frage →</button>
+    </div>
+    <div class="self-rate" id="oralRate" style="display:none; margin-top:14px;"></div>
+    <div class="fc-counter" id="oralCounter" style="margin-top:10px;">Frage 1 / 6</div>
+  </div>
+</section>
+`;
+</script>
+
+<script>
+/* ============================================================
+   DASHBOARD — module grid with icons (built after mainEl.innerHTML
+   has actually injected the dashboard markup, so #dashGridEl exists)
+   ============================================================ */
+const DASH_ICONS = {
+  m1:  `<path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="M8 12h8M8 15.5h8M8 8.5h4"/>`,
+  m2:  `<rect x="4" y="7" width="13" height="9" rx="2" transform="rotate(-6 10.5 11.5)"/><rect x="6.5" y="9" width="13" height="9" rx="2"/>`,
+  m3:  `<circle cx="11" cy="11" r="8.2"/><path d="M7.3 11.2l2.4 2.4 5-5"/>`,
+  m4:  `<circle cx="6" cy="7" r="2.6"/><circle cx="16" cy="15" r="2.6"/><path d="M8.2 8.6l5.6 4.8"/>`,
+  m5:  `<circle cx="11" cy="11" r="8"/><circle cx="11" cy="11" r="4.6"/><circle cx="11" cy="11" r="1.2"/>`,
+  m6:  `<rect x="4" y="3.5" width="14" height="15" rx="2.4"/><path d="M7 7.5h8M7 11h2.2M11.4 11h2.2M15.8 11h0M7 14.6h2.2M11.4 14.6h2.2M15.8 14.6h0"/>`,
+  m7:  `<circle cx="11" cy="12" r="8"/><path d="M11 7.5V12l3.4 2"/><path d="M8.4 2.5h5.2"/>`,
+  m9:  `<path d="M8 3v4.3a3.4 3.4 0 0 0 6 0V3"/><path d="M11 7.3v4.4a5 5 0 0 0 5 5h.3"/><circle cx="17.5" cy="17" r="2.1"/><path d="M4.6 3v4.3"/>`,
+  m10: `<path d="M9 3h4M9.6 3v4.6L5.8 16a2 2 0 0 0 1.9 2.8h6.6a2 2 0 0 0 1.9-2.8l-3.8-8.4V3"/><path d="M7.4 13.5h7.2"/>`,
+  m11: `<rect x="3" y="4" width="16" height="11" rx="1.6"/><path d="M8 19h6M11 15v4"/><path d="M6.5 8.5l2.7 2.6 2.2-2.2 3.1 2.9"/>`,
+  m12: `<circle cx="10" cy="10" r="6.2"/><path d="M14.6 14.6L19 19"/>`,
+  m13: `<circle cx="6" cy="6.5" r="2.1"/><circle cx="17" cy="6.5" r="2.1"/><circle cx="11.5" cy="16" r="2.1"/><path d="M7.7 7.8L10 14M15.3 7.8L13 14M8.1 6.5h6.8"/>`,
+  m14: `<rect x="3.5" y="4.5" width="15" height="14" rx="2"/><path d="M3.5 8.5h15M7 3v3M15 3v3"/><path d="M7.5 12.5l2 2 4-4.2"/>`,
+  m15: `<rect x="8.4" y="3" width="5.2" height="9.2" rx="2.6"/><path d="M5.6 10.4a5.9 5.9 0 0 0 11.8 0"/><path d="M11 16.3V19M8.4 19h5.2"/>`,
+};
+const dashGridEl = document.getElementById('dashGrid');
+if(dashGridEl){
+  MODULES.forEach(m=>{
+    const card = document.createElement('div');
+    card.className = 'dash-card';
+    card.dataset.id = m.id;
+    card.tabIndex = 0;
+    card.setAttribute('role','button');
+    card.setAttribute('aria-label', `${m.label} öffnen`);
+    card.innerHTML = `
+      <div class="dash-card-top">
+        <span class="dash-card-icon">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${DASH_ICONS[m.id] || ''}</svg>
+        </span>
+        <span class="badge neutral">${m.sub}</span>
+      </div>
+      <div class="dash-card-modnum">Modul ${m.num}</div>
+      <div class="dash-card-title">${m.label}</div>
+      <div class="dash-card-desc">${m.desc}</div>
+      <div class="dash-card-cta">Öffnen <span class="arrow">→</span></div>
+    `;
+    card.addEventListener('click', ()=> showModule(m.id));
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); showModule(m.id); } });
+    dashGridEl.appendChild(card);
+  });
+}
+</script>
+
+<script>
+/* ============================================================
+   MODULE 1 — Zusammenfassungen (Accordion) — Jura, Grundrechte
+   ============================================================ */
+const gg = [
+  {art:"Art. 1 GG", title:"Menschenwürde", def:"Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt. Absolut geschützt — keine Abwägung mit anderen Rechtsgütern möglich.",
+   schema:"Schutzbereich: Würdekern jedes Menschen · Eingriff: Instrumentalisierung/Objektformel · Rechtfertigung: nicht möglich (kein Gesetzesvorbehalt)"},
+  {art:"Art. 2 GG", title:"Allgemeine Handlungsfreiheit &amp; Recht auf Leben", def:"Jeder hat das Recht auf freie Entfaltung der Persönlichkeit, soweit er nicht die Rechte anderer verletzt und nicht gegen die verfassungsmäßige Ordnung verstößt. Auffanggrundrecht.",
+   schema:"Schutzbereich: jedes menschliche Verhalten · Eingriff: staatliche Ge-/Verbote · Rechtfertigung: verfassungsmäßige Ordnung, Sittengesetz, Rechte Dritter"},
+  {art:"Art. 3 GG", title:"Gleichheit vor dem Gesetz", def:"Alle Menschen sind vor dem Gesetz gleich. Niemand darf wegen Geschlecht, Abstammung, Rasse, Sprache, Heimat, Glauben o. Ä. benachteiligt werden.",
+   schema:"Prüfung: Ungleichbehandlung wesentlich gleicher Sachverhalte → Rechtfertigung durch sachlichen Grund (Willkürformel / neue Formel je nach Intensität)"},
+  {art:"Art. 4 GG", title:"Glaubens-, Gewissens- und Bekenntnisfreiheit", def:"Die Freiheit des Glaubens, des Gewissens und die Freiheit des religiösen und weltanschaulichen Bekenntnisses sind unverletzlich.",
+   schema:"Schutzbereich: forum internum + forum externum · vorbehaltlos gewährleistet, Schranken nur aus kollidierendem Verfassungsrecht"},
+  {art:"Art. 5 GG", title:"Meinungs-, Presse- und Rundfunkfreiheit", def:"Jeder hat das Recht, seine Meinung frei zu äußern und zu verbreiten. Zensur findet nicht statt. Schranken: allgemeine Gesetze, Jugendschutz, Recht der persönlichen Ehre.",
+   schema:"Schutzbereich: Werturteile &amp; Tatsachenbehauptungen (soweit meinungsbezogen) · Schranken-Trias aus Art. 5 II GG · Wechselwirkungslehre"},
+  {art:"Art. 12 GG", title:"Berufsfreiheit", def:"Alle Deutschen haben das Recht, Beruf, Arbeitsplatz und Ausbildungsstätte frei zu wählen. Die Berufsausübung kann durch Gesetz geregelt werden.",
+   schema:"Drei-Stufen-Theorie: 1. Berufsausübungsregelung (jeder vernünftige Zweck) 2. subjektive Zulassungsvoraussetzung 3. objektive Zulassungsvoraussetzung (nur bei überragend wichtigem Gemeinschaftsgut)"},
+  {art:"Art. 14 GG", title:"Eigentum und Erbrecht", def:"Eigentum und Erbrecht werden gewährleistet. Inhalt und Schranken werden durch die Gesetze bestimmt. Enteignung nur zum Wohle der Allgemeinheit gegen Entschädigung.",
+   schema:"Schutzbereich: vermögenswerte Rechtspositionen · Abgrenzung Inhalts-/Schrankenbestimmung vs. Enteignung"},
+];
+const accHost = document.getElementById('acc');
+gg.forEach((g,i)=>{
+  const div = document.createElement('div');
+  div.className = 'acc-item' + (i===0?' open':'');
+  div.innerHTML = `
+    <div class="acc-head">
+      <span class="art">${g.art}</span>
+      <span class="title">${g.title}</span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="acc-body"><div class="acc-body-inner">
+      ${g.def}
+      <div class="schema-box"><b>Prüfungsschema:</b> ${g.schema}</div>
+    </div></div>`;
+  div.querySelector('.acc-head').addEventListener('click', ()=>{
+    div.classList.toggle('open');
+  });
+  accHost.appendChild(div);
+});
+
+/* ============================================================
+   MODULE 2 — Flashcards — Biologie, Zellorganellen
+   ============================================================ */
+const flashcards = [
+  {f:"Zellkern (Nucleus)", b:"Enthält die DNA (Erbinformation) und steuert alle Zellaktivitäten. Umgeben von der Kernhülle mit Kernporen für den Stoffaustausch."},
+  {f:"Mitochondrium", b:"„Kraftwerk der Zelle“ — Ort der Zellatmung (oxidative Phosphorylierung), produziert ATP. Besitzt eigene DNA."},
+  {f:"Golgi-Apparat", b:"Modifiziert, sortiert und verpackt Proteine und Lipide in Vesikel für den Transport innerhalb oder außerhalb der Zelle."},
+  {f:"Raues ER", b:"Endoplasmatisches Retikulum mit Ribosomen besetzt — Ort der Proteinbiosynthese für Export- und Membranproteine."},
+  {f:"Glattes ER", b:"Ribosomenfrei — zuständig für Lipidsynthese, Entgiftung und Calciumspeicherung."},
+  {f:"Ribosom", b:"Molekulare Maschine zur Übersetzung von mRNA in Proteine (Translation). Frei im Cytoplasma oder am ER gebunden."},
+  {f:"Lysosom", b:"Enthält Verdauungsenzyme (Hydrolasen) zum Abbau von Zellbestandteilen und aufgenommenen Fremdstoffen."},
+  {f:"Chloroplast (Pflanzenzelle)", b:"Ort der Photosynthese — wandelt Lichtenergie in chemische Energie (Glucose) um. Enthält Chlorophyll und eigene DNA."},
+];
+let fcIndex = 0;
+const fcCardEl = document.getElementById('fcCard');
+const fcFrontEl = document.getElementById('fcFront');
+const fcBackEl = document.getElementById('fcBack');
+const fcCounterEl = document.getElementById('fcCounter');
+function renderFc(){
+  fcCardEl.classList.remove('flipped');
+  fcFrontEl.textContent = flashcards[fcIndex].f;
+  fcBackEl.textContent = flashcards[fcIndex].b;
+  fcCounterEl.textContent = `${fcIndex+1} / ${flashcards.length}`;
+}
+fcCardEl.addEventListener('click', ()=> fcCardEl.classList.toggle('flipped'));
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIndex = (fcIndex-1+flashcards.length)%flashcards.length; renderFc(); });
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIndex = (fcIndex+1)%flashcards.length; renderFc(); });
+renderFc();
+
+/* ============================================================
+   MODULE 3 — Quiz — BWL, Kostenrechnung
+   ============================================================ */
+const quizQs = [
+  {q:"Ein Unternehmen zahlt monatlich 4.000 € Miete für die Produktionshalle — unabhängig von der Produktionsmenge. Um welche Kostenart handelt es sich?",
+   opts:["Variable Kosten","Fixkosten","Kalkulatorische Kosten","Grenzkosten"], correct:1,
+   explain:"Miete fällt unabhängig von der Ausbringungsmenge in gleicher Höhe an → klassische Fixkosten."},
+  {q:"Der Materialverbrauch pro produziertem Stück beträgt 3 €. Wie verhalten sich die Materialkosten bei steigender Produktionsmenge?",
+   opts:["Sie bleiben konstant","Sie steigen proportional zur Menge","Sie sinken mit steigender Menge","Sie sind unabhängig von der Menge"], correct:1,
+   explain:"Kosten, die sich proportional zur Ausbringungsmenge verhalten, sind variable Kosten."},
+  {q:"Ein Produkt wird für 25 € verkauft, die variablen Stückkosten betragen 15 €. Wie hoch ist der Stückdeckungsbeitrag?",
+   opts:["40 €","15 €","10 €","25 €"], correct:2,
+   explain:"Deckungsbeitrag = Erlös − variable Kosten = 25 € − 15 € = 10 €."},
+  {q:"Wofür steht der Deckungsbeitrag primär?",
+   opts:["Er deckt ausschließlich variable Kosten","Er trägt zur Deckung der Fixkosten und zum Gewinn bei","Er entspricht immer dem Gewinn","Er ist identisch mit dem Umsatz"], correct:1,
+   explain:"Der Deckungsbeitrag dient zunächst der Deckung der Fixkosten; der Überschuss darüber hinaus ist Gewinn."},
+  {q:"Bei welcher Break-Even-Menge ist der Gesamtdeckungsbeitrag gleich den Fixkosten?",
+   opts:["Bei der Gewinnschwelle (Break-Even-Point)","Bei der Kapazitätsgrenze","Bei der Mindestbestellmenge","Bei der optimalen Losgröße"], correct:0,
+   explain:"Am Break-Even-Point deckt der gesamte Deckungsbeitrag exakt die Fixkosten — Gewinn ist 0."},
+];
+let quizIdx = 0, quizScore = 0, quizAnswered = false;
+const quizCardEl = document.getElementById('quizCard');
+function renderQuiz(){
+  if(quizIdx >= quizQs.length){ renderQuizResult(); return; }
+  quizAnswered = false;
+  const q = quizQs[quizIdx];
+  let progressHtml = '';
+  for(let i=0;i<quizQs.length;i++){ progressHtml += `<span class="${i<quizIdx?'done':(i===quizIdx?'done':'')}"></span>`; }
+  quizCardEl.innerHTML = `
+    <div class="quiz-progress">${quizQs.map((_,i)=>`<span class="${i<=quizIdx-1?'done':''}"></span>`).join('')}</div>
+    <div class="quiz-q">Frage ${quizIdx+1} von ${quizQs.length}: ${q.q}</div>
+    <div class="quiz-opts" id="quizOpts">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" data-i="${i}">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-explain" id="quizExplain">${q.explain}</div>
+    <button class="btn" id="quizNextBtn" style="display:none;">Weiter</button>
+  `;
+  quizCardEl.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const chosen = parseInt(btn.dataset.i);
+      quizCardEl.querySelectorAll('.quiz-opt').forEach(b=>b.disabled = true);
+      if(chosen === q.correct){
+        btn.classList.add('correct');
+        quizScore++;
+      } else {
+        btn.classList.add('wrong');
+        quizCardEl.querySelector(`.quiz-opt[data-i="${q.correct}"]`).classList.add('correct');
+      }
+      document.getElementById('quizExplain').classList.add('show');
+      document.getElementById('quizNextBtn').style.display = 'inline-block';
+    });
+  });
+  document.getElementById('quizNextBtn').addEventListener('click', ()=>{ quizIdx++; renderQuiz(); });
+}
+function renderQuizResult(){
+  const pct = Math.round((quizScore/quizQs.length)*100);
+  let verdict, cls;
+  if(pct >= 80){ verdict = "Sehr gut — dieses Thema sitzt."; cls='good'; }
+  else if(pct >= 60){ verdict = "Solide, aber noch nicht klausurreif — ein paar Lücken bleiben."; cls='neutral'; }
+  else { verdict = "Hier besteht noch deutlicher Nachholbedarf — Kostenrechnung nochmal wiederholen."; cls='bad'; }
+  quizCardEl.innerHTML = `
+    <div class="quiz-result">
+      <div class="score">${quizScore} / ${quizQs.length}</div>
+      <div class="badge ${cls}" style="margin-bottom:14px;">${pct}% richtig</div>
+      <p style="color:var(--text-dim); font-size:13.5px; max-width:400px; margin:0 auto 18px;">${verdict}</p>
+      <button class="btn ghost" id="quizRestart">Quiz erneut starten</button>
+    </div>`;
+  document.getElementById('quizRestart').addEventListener('click', ()=>{ quizIdx=0; quizScore=0; renderQuiz(); });
+}
+renderQuiz();
+
+/* ============================================================
+   MODULE 4 — Zuordnungsspiel — Geschichte
+   ============================================================ */
+const matchPairs = [
+  {event:"Beginn des Ersten Weltkriegs", year:"1914"},
+  {event:"Novemberrevolution / Ende des Ersten Weltkriegs", year:"1918"},
+  {event:"Weltwirtschaftskrise („Schwarzer Donnerstag“)", year:"1929"},
+  {event:"Machtergreifung Adolf Hitlers", year:"1933"},
+  {event:"Ende des Zweiten Weltkriegs", year:"1945"},
+  {event:"Fall der Berliner Mauer", year:"1989"},
+];
+const shuffledYears = [...matchPairs].sort(()=>Math.random()-0.5);
+let matchSelectedEvent = null, matchFound = 0;
+const evHost = document.getElementById('matchEvents');
+const yrHost = document.getElementById('matchYears');
+matchPairs.forEach((p,i)=>{
+  const d = document.createElement('div');
+  d.className='match-item'; d.textContent = p.event; d.dataset.id = i;
+  d.addEventListener('click', ()=>{
+    if(d.classList.contains('matched')) return;
+    evHost.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+    d.classList.add('selected');
+    matchSelectedEvent = i;
+  });
+  evHost.appendChild(d);
+});
+shuffledYears.forEach((p)=>{
+  const origIdx = matchPairs.findIndex(x=>x.year===p.year);
+  const d = document.createElement('div');
+  d.className='match-item'; d.textContent = p.year; d.dataset.id = origIdx;
+  d.addEventListener('click', ()=>{
+    if(d.classList.contains('matched') || matchSelectedEvent===null) return;
+    const evEl = evHost.querySelector(`.match-item[data-id="${matchSelectedEvent}"]`);
+    if(parseInt(d.dataset.id) === matchSelectedEvent){
+      evEl.classList.add('matched'); evEl.classList.remove('selected');
+      d.classList.add('matched');
+      matchFound++;
+      matchSelectedEvent = null;
+      document.getElementById('matchStatus').textContent = `${matchFound} von ${matchPairs.length} Paaren gefunden`;
+      if(matchFound === matchPairs.length){
+        document.getElementById('matchStatus').textContent = `Alle ${matchPairs.length} Paare richtig zugeordnet — sehr gut!`;
+      }
+    } else {
+      d.classList.add('shake');
+      evEl.classList.add('shake');
+      setTimeout(()=>{ d.classList.remove('shake'); evEl.classList.remove('shake'); evEl.classList.remove('selected'); matchSelectedEvent=null; }, 450);
+    }
+  });
+  yrHost.appendChild(d);
+});
+
+/* ============================================================
+   MODULE 5 — Schwachstellen-Radar — Mathematik
+   ============================================================ */
+const radarData = [
+  {label:"Potenzregel", val:88},
+  {label:"Produktregel", val:70},
+  {label:"Kettenregel", val:38},
+  {label:"Quotientenregel", val:52},
+  {label:"Ableitung trig. Funktionen", val:64},
+];
+function buildRadarSvg(data){
+  const size=300, cx=size/2, cy=size/2, r=100;
+  const n = data.length;
+  const angle = i => (Math.PI*2*i/n) - Math.PI/2;
+  let gridRings = [0.25,0.5,0.75,1].map(f=>{
+    const pts = data.map((_,i)=>{
+      const a=angle(i); return `${cx+Math.cos(a)*r*f},${cy+Math.sin(a)*r*f}`;
+    }).join(' ');
+    return `<polygon points="${pts}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
+  }).join('');
+  let axes = data.map((_,i)=>{
+    const a = angle(i);
+    const x2 = cx+Math.cos(a)*r, y2 = cy+Math.sin(a)*r;
+    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,.1)" stroke-width="1"/>`;
+  }).join('');
+  let dataPts = data.map((d,i)=>{
+    const a = angle(i); const f = d.val/100;
+    return `${cx+Math.cos(a)*r*f},${cy+Math.sin(a)*r*f}`;
+  }).join(' ');
+  let dots = data.map((d,i)=>{
+    const a = angle(i); const f = d.val/100;
+    const x = cx+Math.cos(a)*r*f, y = cy+Math.sin(a)*r*f;
+    return `<circle cx="${x}" cy="${y}" r="4" fill="#2F6FE0"/>`;
+  }).join('');
+  let labels = data.map((d,i)=>{
+    const a = angle(i);
+    const lr = r + 34;
+    let x = cx+Math.cos(a)*lr, y = cy+Math.sin(a)*lr;
+    let anchor = 'middle';
+    if(Math.cos(a) > 0.3) anchor='start';
+    else if(Math.cos(a) < -0.3) anchor='end';
+    return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="11" fill="#B4B7C4" font-family="inherit">${d.label}</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${size} ${size+20}" width="320" height="340" xmlns="http://www.w3.org/2000/svg">
+    ${gridRings}${axes}
+    <polygon points="${dataPts}" fill="rgba(47,111,224,.22)" stroke="#2F6FE0" stroke-width="2"/>
+    ${dots}
+    ${labels}
+  </svg>`;
+}
+document.getElementById('radarSvgWrap').innerHTML = buildRadarSvg(radarData);
+const radarListHost = document.getElementById('radarList');
+radarData.slice().sort((a,b)=>a.val-b.val).forEach(d=>{
+  const row = document.createElement('div');
+  row.className='ritem';
+  row.innerHTML = `<span>${d.label}</span><span class="rbar"><i style="width:${d.val}%; background:${d.val<50?'var(--bad)':(d.val<70?'var(--blue)':'var(--good)')}"></i></span><span class="rval">${d.val}%</span>`;
+  radarListHost.appendChild(row);
+});
+document.getElementById('radarReco').innerHTML = `<b>Empfehlung:</b> Fokussiere deine nächste Lernsession auf die <b>Kettenregel</b> (38 %) und die <b>Quotientenregel</b> (52 %) — hier liegen deine größten Punktepotenziale vor der Klausur.`;
+
+/* ============================================================
+   MODULE 6 — Formelkasten — Physik, Mechanik
+   ============================================================ */
+const formulas = [
+  {cat:"Kraft", eq:"F = m · a", name:"Newtons 2. Gesetz", vars:"F = Kraft (N), m = Masse (kg), a = Beschleunigung (m/s²)"},
+  {cat:"Kraft", eq:"F_R = μ · F_N", name:"Reibungskraft", vars:"μ = Reibungskoeffizient, F_N = Normalkraft (N)"},
+  {cat:"Kraft", eq:"F_Z = m·v² / r", name:"Zentripetalkraft", vars:"v = Bahngeschwindigkeit (m/s), r = Radius (m)"},
+  {cat:"Energie", eq:"E_kin = ½ · m · v²", name:"Kinetische Energie", vars:"m = Masse (kg), v = Geschwindigkeit (m/s)"},
+  {cat:"Energie", eq:"E_pot = m · g · h", name:"Potenzielle Energie", vars:"g = 9,81 m/s², h = Höhe (m)"},
+  {cat:"Energie", eq:"W = F · s", name:"Mechanische Arbeit", vars:"s = zurückgelegter Weg (m) in Kraftrichtung"},
+  {cat:"Impuls", eq:"p = m · v", name:"Impuls", vars:"p = Impuls (kg·m/s)"},
+  {cat:"Impuls", eq:"p_vorher = p_nachher", name:"Impulserhaltung", vars:"gilt in einem abgeschlossenen System bei Stößen"},
+];
+const cats = ["Alle", ...new Set(formulas.map(f=>f.cat))];
+const formTabsHost = document.getElementById('formTabs');
+const formGridHost = document.getElementById('formGrid');
+formulas.forEach(f=>{
+  const c = document.createElement('div');
+  c.className='fcard show'; c.dataset.cat = f.cat;
+  c.innerHTML = `<div class="eq">${f.eq}</div><div class="name">${f.name}</div><div class="vars">${f.vars}</div>`;
+  formGridHost.appendChild(c);
+});
+cats.forEach((c,i)=>{
+  const t = document.createElement('div');
+  t.className='tab'+(i===0?' active':''); t.textContent=c;
+  t.addEventListener('click', ()=>{
+    formTabsHost.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    formGridHost.querySelectorAll('.fcard').forEach(card=>{
+      card.classList.toggle('show', c==='Alle' || card.dataset.cat===c);
+    });
+  });
+  formTabsHost.appendChild(t);
+});
+
+/* ============================================================
+   MODULE 7 — Altklausuren-Simulator — VWL
+   ============================================================ */
+const examQs = [
+  {q:"Die Nachfragefunktion lautet p = 100 − 2x. Bei welchem Preis ist die nachgefragte Menge x = 30?",
+   opts:["p = 30","p = 40","p = 60","p = 70"], correct:1,
+   explain:"p = 100 − 2·30 = 100 − 60 = 40."},
+  {q:"Steigt der Preis eines Gutes und die Nachfrage sinkt stark, spricht man von …",
+   opts:["unelastischer Nachfrage","elastischer Nachfrage","vollkommen starrer Nachfrage","inverser Angebotsfunktion"], correct:1,
+   explain:"Eine starke Mengenreaktion auf eine Preisänderung entspricht einer preiselastischen Nachfrage."},
+  {q:"Im Marktgleichgewicht gilt:",
+   opts:["Angebotsmenge = 0","Angebotsmenge = Nachfragemenge","Nachfragepreis > Angebotspreis","Angebot ist irrelevant"], correct:1,
+   explain:"Das Marktgleichgewicht liegt dort, wo sich Angebots- und Nachfragekurve schneiden — Angebotsmenge = Nachfragemenge."},
+];
+let examIdx=0, examScore=0, examTime=45, examTimerId=null, examAnswered=false;
+const examCardEl = document.getElementById('examCard');
+function renderExam(){
+  if(examIdx >= examQs.length){ finishExam(); return; }
+  examAnswered = false;
+  examTime = 45;
+  clearInterval(examTimerId);
+  const q = examQs[examIdx];
+  examCardEl.innerHTML = `
+    <div class="timer-bar">
+      <span style="font-size:12px;color:var(--text-faint);">Frage ${examIdx+1}/${examQs.length}</span>
+      <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+      <div class="timer-num" id="timerNum">${examTime}s</div>
+    </div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts" id="examOpts">${q.opts.map((o,i)=>`<button class="quiz-opt" data-i="${i}">${o}</button>`).join('')}</div>
+    <div class="quiz-explain" id="examExplain">${q.explain}</div>
+    <button class="btn" id="examNextBtn" style="display:none;">Weiter</button>
+  `;
+  examCardEl.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=> answerExam(parseInt(btn.dataset.i)));
+  });
+  document.getElementById('examNextBtn').addEventListener('click', ()=>{ examIdx++; renderExam(); });
+  examTimerId = setInterval(()=>{
+    examTime--;
+    const fillEl = document.getElementById('timerFill');
+    const numEl = document.getElementById('timerNum');
+    if(fillEl){ fillEl.style.width = `${(examTime/45)*100}%`; numEl.textContent = `${Math.max(examTime,0)}s`; }
+    if(examTime<=0){ clearInterval(examTimerId); if(!examAnswered) answerExam(-1); }
+  }, 1000);
+}
+function answerExam(chosen){
+  if(examAnswered) return;
+  examAnswered = true;
+  clearInterval(examTimerId);
+  const q = examQs[examIdx];
+  examCardEl.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  if(chosen === q.correct){
+    examScore++;
+    if(chosen>=0) examCardEl.querySelector(`.quiz-opt[data-i="${chosen}"]`).classList.add('correct');
+  } else {
+    if(chosen>=0) examCardEl.querySelector(`.quiz-opt[data-i="${chosen}"]`).classList.add('wrong');
+    examCardEl.querySelector(`.quiz-opt[data-i="${q.correct}"]`).classList.add('correct');
+  }
+  document.getElementById('examExplain').classList.add('show');
+  document.getElementById('examNextBtn').style.display='inline-block';
+}
+function finishExam(){
+  const pct = Math.round((examScore/examQs.length)*100);
+  const verdict = pct>=80 ? "Klausurreif — starke Leistung unter Zeitdruck." : pct>=50 ? "Grundlagen sitzen, aber unter Zeitdruck noch zu langsam/unsicher." : "Unter Zeitdruck reicht es noch nicht — mehr Übung mit Timer nötig.";
+  examCardEl.innerHTML = `<div class="quiz-result">
+    <div class="score">${examScore} / ${examQs.length}</div>
+    <p style="color:var(--text-dim);font-size:13.5px;max-width:420px;margin:0 auto 18px;">${verdict}</p>
+    <button class="btn ghost" id="examRestart">Simulation erneut starten</button>
+  </div>`;
+  document.getElementById('examRestart').addEventListener('click', ()=>{ examIdx=0; examScore=0; renderExam(); });
+}
+renderExam();
+
+/* ============================================================
+   MODULE 9 — Fallbeispiel-Simulator — Medizin
+   ============================================================ */
+const caseCardEl = document.getElementById('caseCard');
+let caseStep = 0;
+function renderCase(){
+  const steps = [
+    {k:"Anamnese", txt:"28-jährige Patientin stellt sich mit seit 6 Stunden zunehmenden Schmerzen im rechten Unterbauch vor, begleitet von Übelkeit und subfebriler Temperatur (37,8 °C).",
+     choices:["Körperliche Untersuchung durchführen", "Sofort operieren"]},
+    {k:"Untersuchung", txt:"Loslassschmerz und Druckschmerz am McBurney-Punkt positiv. Psoas-Zeichen positiv. Labor: leicht erhöhte Leukozyten (12.500/µl), CRP erhöht.",
+     choices:["Abdomensonographie anordnen", "Direkt Antibiotikum geben und entlassen"]},
+    {k:"Bildgebung", txt:"Sonographie zeigt eine verdickte, nicht komprimierbare Appendix (Durchmesser 9 mm) mit umgebender freier Flüssigkeit.",
+     choices:["Verdachtsdiagnose stellen"]},
+  ];
+  if(caseStep < steps.length){
+    const s = steps[caseStep];
+    caseCardEl.innerHTML = `<div class="case-step">
+        <div class="k">${s.k}</div>
+        <div>${s.txt}</div>
+        <div class="case-choices">${s.choices.map((c,i)=>`<button class="btn ghost small case-choice" data-i="${i}">${c}</button>`).join('')}</div>
+      </div>`;
+    caseCardEl.querySelectorAll('.case-choice').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ caseStep++; renderCase(); });
+    });
+  } else {
+    caseCardEl.innerHTML = `<div class="case-step">
+      <div class="k">Differentialdiagnose</div>
+      <div>Klinik, Labor und Sonographie sprechen in der Zusammenschau am ehesten für eine <b>akute Appendizitis</b>.
+      Wichtige Differentialdiagnosen bei akuten Bauchschmerzen rechts unten: Gallenkolik (eher rechter Oberbauch),
+      Ovarialzyste/-torsion, Harnleiterkolik, Meckel-Divertikel, Adnexitis.</div>
+      <div class="schema-box" style="margin-top:12px;"><b>Empfohlenes Vorgehen:</b> chirurgisches Konsil, ggf. laparoskopische Appendektomie.</div>
+      <button class="btn small" id="caseRestart" style="margin-top:14px;">Fall neu starten</button>
+    </div>`;
+    document.getElementById('caseRestart').addEventListener('click', ()=>{ caseStep=0; renderCase(); });
+  }
+}
+renderCase();
+
+/* ============================================================
+   MODULE 10 — Experiment-Trainer — Chemie, Stöchiometrie
+   ============================================================ */
+document.getElementById('calcBtn').addEventListener('click', ()=>{
+  const mMg = parseFloat(document.getElementById('mgInput').value);
+  const stepsEl = document.getElementById('calcSteps');
+  if(!mMg || mMg<=0){
+    stepsEl.innerHTML = `Bitte gib eine gültige Masse für Magnesium ein.`;
+    stepsEl.classList.add('show');
+    return;
+  }
+  const M_Mg = 24.31; // g/mol
+  const M_MgO = 40.30; // g/mol
+  const n_Mg = mMg / M_Mg;
+  const n_MgO = n_Mg; // 2 Mg : 2 MgO -> 1:1
+  const m_MgO = n_MgO * M_MgO;
+  stepsEl.innerHTML = `
+    <div><b>Reaktionsgleichung:</b> 2 Mg + O₂ → 2 MgO (Stoffmengenverhältnis Mg : MgO = 1 : 1)</div>
+    <div style="margin-top:8px;"><b>1. Stoffmenge Mg berechnen:</b> n(Mg) = m / M = ${mMg} g / ${M_Mg} g/mol = <b>${n_Mg.toFixed(3)} mol</b></div>
+    <div><b>2. Stoffmenge MgO (1:1-Verhältnis):</b> n(MgO) = ${n_Mg.toFixed(3)} mol</div>
+    <div><b>3. Masse MgO berechnen:</b> m(MgO) = n · M = ${n_Mg.toFixed(3)} mol × ${M_MgO} g/mol = <b>${m_MgO.toFixed(2)} g</b></div>
+    <div style="margin-top:8px; color:var(--text);">→ Aus ${mMg} g Magnesium entstehen theoretisch ${m_MgO.toFixed(2)} g Magnesiumoxid.</div>
+  `;
+  stepsEl.classList.add('show');
+});
+
+/* ============================================================
+   MODULE 11 — Unterrichtsentwurf-Baustein — Lehramt
+   ============================================================ */
+const phases = [
+  {name:"Übersicht", body:`<b>Thema der Stunde:</b> Einführung des kleinen Einmaleins (Reihe: 4er-Reihe)<br>
+    <b>Klassenstufe:</b> 3. Klasse Grundschule &nbsp;•&nbsp; <b>Dauer:</b> 45 Minuten<br><br>
+    <b>Lernziele:</b><br>
+    – Die SuS können die 4er-Reihe bis 10 × 4 sicher anwenden.<br>
+    – Die SuS erkennen den Zusammenhang zwischen Addition und Multiplikation.<br>
+    – Die SuS können Rechenaufgaben in Sachkontexten (z. B. Eierkartons) übersetzen.`},
+  {name:"Einstieg", body:`(5 Min.) Impuls mit vier Eierkartons à 4 Eier auf dem Overheadprojektor. Frage: „Wie viele Eier sind das insgesamt — und wie können wir das schnell herausfinden, ohne alle einzeln zu zählen?“ → Hinführung zur Multiplikation als „verkürzte Addition“.`},
+  {name:"Erarbeitung", body:`(20 Min.) Gruppenarbeit an Stationen: Legen der 4er-Reihe mit Wendeplättchen, Eintragen in eine Tabelle, Entdecken des Musters (+4 pro Schritt). Anschließend gemeinsame Sicherung an der Tafel mit der vollständigen Malreihe 1×4 bis 10×4.`},
+  {name:"Sicherung", body:`(12 Min.) Einzelarbeit: Arbeitsblatt mit gemischten Aufgaben zur 4er-Reihe sowie zwei Sachaufgaben. Differenzierung: leistungsstärkere SuS erhalten zusätzliche Rechenrätsel.`},
+  {name:"Materialien", body:`Overheadprojektor/Dokumentenkamera, Eierkartons (Anschauungsmaterial), Wendeplättchen, Arbeitsblatt „4er-Reihe“, Tafelbild-Vorlage.`},
+];
+const phaseTabsHost = document.getElementById('phaseTabs');
+const phasePanelsHost = document.getElementById('phasePanels');
+phases.forEach((p,i)=>{
+  const t = document.createElement('div');
+  t.className='tab'+(i===0?' active':''); t.textContent=p.name;
+  t.addEventListener('click', ()=>{
+    phaseTabsHost.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    phasePanelsHost.querySelectorAll('.phase-panel').forEach((pp,j)=>pp.classList.toggle('show', j===i));
+  });
+  phaseTabsHost.appendChild(t);
+  const panel = document.createElement('div');
+  panel.className='phase-panel'+(i===0?' show':'');
+  panel.innerHTML = p.body;
+  phasePanelsHost.appendChild(panel);
+});
+document.querySelector('.phase-panel').insertAdjacentHTML('afterend', `
+  <table class="lp-table">
+    <tr><th>Phase</th><th>Zeit</th><th>Sozialform</th></tr>
+    <tr><td>Einstieg</td><td>5 Min.</td><td>Plenum</td></tr>
+    <tr><td>Erarbeitung</td><td>20 Min.</td><td>Gruppenarbeit</td></tr>
+    <tr><td>Sicherung</td><td>12 Min.</td><td>Einzelarbeit</td></tr>
+    <tr><td>Abschluss</td><td>8 Min.</td><td>Plenum</td></tr>
+  </table>
+`);
+
+/* ============================================================
+   MODULE 12 — Begriffs-Glossar — Psychologie
+   ============================================================ */
+const glossary = [
+  {term:"Assimilation", def:"Nach Piaget: Einordnung neuer Informationen in bereits vorhandene kognitive Schemata."},
+  {term:"Akkommodation", def:"Nach Piaget: Anpassung bestehender kognitiver Schemata an neue Informationen, wenn diese nicht ins bestehende Schema passen."},
+  {term:"Objektpermanenz", def:"Das Verständnis, dass Objekte weiter existieren, auch wenn sie nicht wahrgenommen werden — entwickelt sich in der sensomotorischen Phase (Piaget)."},
+  {term:"Bindungstheorie", def:"Nach Bowlby/Ainsworth: Theorie über die emotionale Beziehung zwischen Kind und Bezugsperson und deren Einfluss auf die spätere Entwicklung."},
+  {term:"Sensible Phase", def:"Zeitfenster, in dem ein Organismus besonders empfänglich für bestimmte Entwicklungsreize ist (z. B. Spracherwerb)."},
+  {term:"Zone der nächsten Entwicklung", def:"Nach Wygotski: Abstand zwischen dem, was ein Kind allein leisten kann, und dem, was es mit Unterstützung leisten kann."},
+  {term:"Reifung", def:"Biologisch gesteuerte Entwicklung, die weitgehend unabhängig von Umwelteinflüssen abläuft."},
+  {term:"Sozialisation", def:"Prozess, durch den ein Individuum die Werte, Normen und Verhaltensweisen seiner Gesellschaft erlernt und verinnerlicht."},
+];
+const glossHost = document.getElementById('glossList');
+function renderGlossary(filter=''){
+  glossHost.innerHTML='';
+  glossary.filter(g=> g.term.toLowerCase().includes(filter.toLowerCase()) || g.def.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(g=>{
+      const d = document.createElement('div');
+      d.className='glossary-item';
+      d.innerHTML = `<div class="term">${g.term}</div><div class="def">${g.def}</div>`;
+      glossHost.appendChild(d);
+    });
+  if(!glossHost.children.length){ glossHost.innerHTML = `<div style="color:var(--text-faint); font-size:13px; padding:10px 0;">Kein Begriff gefunden.</div>`; }
+}
+document.getElementById('glossSearch').addEventListener('input', e=> renderGlossary(e.target.value));
+renderGlossary();
+
+/* ============================================================
+   MODULE 13 — Themenlandkarte — Geschichte, 1. WK Ursachen
+   ============================================================ */
+function buildMapSvg(){
+  const w=760, h=520, cx=w/2, cy=h/2;
+  const branches = [
+    {label:"Bündnissysteme", detail:"Zweibund/Dreibund vs. Triple Entente", angle:-90},
+    {label:"Nationalismus", detail:"Spannungen auf dem Balkan, Panslawismus", angle:-18},
+    {label:"Wettrüsten", detail:"Deutsch-britisches Flottenwettrüsten", angle:54},
+    {label:"Imperialismus", detail:"Konkurrenz um Kolonien &amp; Märkte", angle:126},
+    {label:"Julikrise 1914", detail:"Attentat von Sarajevo als Auslöser", angle:198},
+  ];
+  const R = 195;
+  let lines='', nodes='';
+  branches.forEach(b=>{
+    const rad = b.angle*Math.PI/180;
+    const x = cx+Math.cos(rad)*R, y = cy+Math.sin(rad)*R;
+    lines += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(47,111,224,.4)" stroke-width="2"/>`;
+    const boxW=190, boxH=64;
+    nodes += `
+      <g transform="translate(${x-boxW/2},${y-boxH/2})">
+        <rect width="${boxW}" height="${boxH}" rx="16" fill="#1C1D24" stroke="#2F6FE0" stroke-width="1.5"/>
+        <text x="${boxW/2}" y="24" text-anchor="middle" font-size="13.5" font-weight="700" fill="#F2F3F7">${b.label}</text>
+        <foreignObject x="10" y="30" width="${boxW-20}" height="${boxH-32}">
+          <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:10.8px; color:#B4B7C4; line-height:1.35; font-family:inherit; text-align:center;">${b.detail}</div>
+        </foreignObject>
+      </g>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px; display:block; margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="${w}" height="${h}" fill="transparent"/>
+    ${lines}
+    <g transform="translate(${cx-115},${cy-42})">
+      <rect width="230" height="84" rx="20" fill="#2F6FE0" />
+      <text x="115" y="34" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">Erster Weltkrieg</text>
+      <text x="115" y="56" text-anchor="middle" font-size="12" font-weight="600" fill="#DCE7FF">— Ursachen —</text>
+    </g>
+    ${nodes}
+  </svg>`;
+}
+document.getElementById('mapSvgWrap').innerHTML = buildMapSvg();
+
+/* ============================================================
+   MODULE 14 — Wiederholungsplan
+   ============================================================ */
+const planDays = [
+  {d:"Tag 1", t:"Grundlagen wiederholen", s:"Ableitungsregeln & Kurvendiskussion auffrischen"},
+  {d:"Tag 2", t:"Übungsaufgaben Kapitel 1–3", s:"20 Aufgaben aus dem Skript rechnen"},
+  {d:"Tag 3", t:"Altklausur 2023 bearbeiten", s:"Unter Zeitdruck, danach Fehleranalyse"},
+  {d:"Tag 4", t:"Schwachstellen gezielt üben", s:"Fokus laut Schwachstellen-Radar: Kettenregel"},
+  {d:"Tag 5", t:"Ruhetag / leichte Wiederholung", s:"Karteikarten mit Formeln durchgehen"},
+  {d:"Tag 6", t:"Altklausur 2022 bearbeiten", s:"Vollständig unter Klausurbedingungen"},
+  {d:"Tag 7", t:"Fehleranalyse & Lückenschluss", s:"Nur die falsch gelösten Aufgabentypen wiederholen"},
+  {d:"Tag 8", t:"Simulation komplette Klausur", s:"90 Minuten, realistische Bedingungen"},
+  {d:"Tag 9", t:"Formelsammlung & Cheat Sheet finalisieren", s:"Alle Formeln einmal auswendig aufschreiben"},
+  {d:"Tag 10", t:"Leichtes Auffrischen, früh schlafen", s:"Keine neuen Themen mehr — nur kurz querlesen"},
+];
+const planListHost = document.getElementById('planList');
+function updatePlanProgress(){
+  const total = planListHost.querySelectorAll('input[type=checkbox]').length;
+  const done = planListHost.querySelectorAll('input[type=checkbox]:checked').length;
+  const pct = total? Math.round((done/total)*100) : 0;
+  document.getElementById('planFill').style.width = pct+'%';
+  document.getElementById('planPct').textContent = pct+'%';
+}
+planDays.forEach((p,i)=>{
+  const row = document.createElement('div');
+  row.className='plan-day';
+  row.innerHTML = `<input type="checkbox" id="pd${i}">
+    <div><div class="d">${p.d}</div><div class="t">${p.t}</div><div class="s">${p.s}</div></div>`;
+  const cb = row.querySelector('input');
+  cb.addEventListener('change', ()=>{ row.classList.toggle('done', cb.checked); updatePlanProgress(); });
+  planListHost.appendChild(row);
+});
+updatePlanProgress();
+
+/* ============================================================
+   MODULE 15 — Mündliche-Prüfung-Trainer — Germanistik, Faust
+   ============================================================ */
+const oralQs = [
+  {q:"Erläutern Sie den Kern der „Gretchenfrage“ in Goethes Faust I und ihre thematische Bedeutung.", a:"Die „Gretchenfrage“ (Faust I, Marthens Garten) bezieht sich auf Gretchens Frage an Faust: „Nun sag, wie hast du's mit der Religion?“ Sie steht sinnbildlich für eine unausweichliche, gewissensentscheidende Grundsatzfrage und spiegelt den Konflikt zwischen Fausts rationalem Erkenntnisdrang und Gretchens naivem, gefühlsbetontem Glauben."},
+  {q:"Was ist der Inhalt der „Wette“ zwischen Faust und Mephisto und welche Bedeutung hat sie für die Handlung?", a:"Faust wettet mit Mephisto, dass dieser ihn nie zu einem Moment vollkommener Zufriedenheit führen kann, in dem er sagen würde: „Verweile doch, du bist so schön!“ Diese Wette treibt die gesamte Handlung an und stellt Fausts rastloses Streben nach Erkenntnis und Erfüllung in den Mittelpunkt."},
+  {q:"Charakterisieren Sie Mephistopheles als Figur.", a:"Mephisto tritt als zynischer, sprachgewandter Verführer auf, der sich selbst als „Teil von jener Kraft, die stets das Böse will und stets das Gute schafft“ beschreibt. Er fungiert als Kontrastfigur zu Faust und treibt ihn durch Versuchungen voran, ohne dass sein Wirken eindeutig negativ zu bewerten ist."},
+  {q:"Welche Rolle spielt der „Prolog im Himmel“ für das Verständnis des gesamten Dramas?", a:"Im „Prolog im Himmel“ schließen Gott und Mephisto eine Wette über Faust, in Anlehnung an das biblische Hiob-Motiv. Gott vertraut darauf, dass ein Mensch, der strebt, trotz Irrwegen zum Guten findet („Es irrt der Mensch, solang er strebt“) — dies liefert den thematischen Rahmen für das gesamte Drama."},
+  {q:"Inwiefern lässt sich Faust I als „bürgerliches Trauerspiel“ im Kontext der Gretchen-Tragödie lesen?", a:"Die Gretchen-Handlung zeigt typische Merkmale des bürgerlichen Trauerspiels: der Konflikt zwischen individuellem Begehren und gesellschaftlicher Moral, Gretchens sozialer Abstieg durch Kindsmord und Verzweiflung, sowie das tragische Scheitern einer bürgerlichen Figur an höfischen/adligen Verführern (Faust)."},
+  {q:"Was bedeutet der Schlusssatz „Ist gerettet“ am Ende von Faust I?", a:"Am Ende von Faust I wird Gretchen trotz ihrer Schuld (Kindsmord) durch eine Stimme von oben als „gerettet“ erklärt — ein zentrales Motiv göttlicher Gnade, das im Gegensatz zu Mephistos Ausruf „Sie ist gerichtet!“ steht und auf die göttliche Erlösung jenseits weltlicher Gerechtigkeit verweist."},
+];
+let oralIdx = 0;
+function renderOral(){
+  document.getElementById('oralQ').textContent = oralQs[oralIdx].q;
+  const aEl = document.getElementById('oralA');
+  aEl.textContent = oralQs[oralIdx].a;
+  aEl.classList.remove('show');
+  document.getElementById('oralRate').style.display='none';
+  document.getElementById('oralCounter').textContent = `Frage ${oralIdx+1} / ${oralQs.length}`;
+}
+document.getElementById('oralReveal').addEventListener('click', ()=>{
+  document.getElementById('oralA').classList.add('show');
+  const rateHost = document.getElementById('oralRate');
+  rateHost.style.display='flex';
+  rateHost.innerHTML = `
+    <button class="btn ghost small" data-r="gut">🟢 Konnte ich gut</button>
+    <button class="btn ghost small" data-r="mittel">🟡 Teilweise gewusst</button>
+    <button class="btn ghost small" data-r="schlecht">🔴 Noch nicht sicher</button>`;
+  rateHost.querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=>{
+    oralIdx = (oralIdx+1)%oralQs.length; renderOral();
+  }));
+});
+document.getElementById('oralNext').addEventListener('click', ()=>{ oralIdx=(oralIdx+1)%oralQs.length; renderOral(); });
+renderOral();
+
+/* ---------- init sidebar active state ---------- */
+showModule('dashboard');
+</script>
+
+</body>
+</html>
