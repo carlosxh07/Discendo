@@ -1441,11 +1441,30 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   }
 
   let hasAccess = false; // wird true, sobald jemand wirklich Zugriff bekommen hat (bezahlt oder Easter Egg)
+  const ACCESS_STORAGE_KEY = 'discendo_unlocked';
+
+  // Zuerst prüfen: war dieses Gerät/dieser Browser schon mal freigeschaltet?
+  // (localStorage bleibt über Neuladen, Neustart und die installierte Desktop-/
+  // Handy-App hinweg erhalten, da beide denselben Speicher-Ursprung teilen.)
+  function checkPersistedAccess(){
+    if(localStorage.getItem(ACCESS_STORAGE_KEY) === '1'){
+      hasAccess = true;
+      document.getElementById('salesPage').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      return true;
+    }
+    return false;
+  }
 
   function unlockIfPaid(){
+    // Bereits früher freigeschaltet? Dann nicht nochmal die Danke-Seite/den
+    // Download-Vorgang auslösen — einfach direkt in der App bleiben.
+    if(checkPersistedAccess()) return;
+
     const params = new URLSearchParams(window.location.search);
     if(params.get('paid') === '1'){
       hasAccess = true;
+      localStorage.setItem(ACCESS_STORAGE_KEY, '1');
       document.getElementById('salesPage').style.display = 'none';
       document.getElementById('thankYou').style.display = 'flex';
       // Download startet automatisch, damit die Datei auch dann gesichert ist,
@@ -1496,6 +1515,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     const val = document.getElementById('passwordInput').value.trim();
     if(val === ACCESS_CODE){
       hasAccess = true;
+      localStorage.setItem(ACCESS_STORAGE_KEY, '1');
       document.getElementById('passwordGate').style.display = 'none';
       document.getElementById('salesPage').style.display = 'none';
       document.getElementById('thankYou').style.display = 'flex';
