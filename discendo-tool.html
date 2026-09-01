@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Discendo — Dein Study Hub Baukasten (eigene Kopie)</title>
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -421,6 +423,13 @@
   .compare-card.good li::before{content:"✓"; color:var(--ok); flex-shrink:0;}
 
   .feature-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+  .demo-showcase{
+    margin-top:36px; padding:40px 44px; border-radius:20px; text-align:center;
+    background:radial-gradient(circle at 50% 0%, rgba(76,141,255,.1), transparent 70%), rgba(255,255,255,.03);
+    border:1px solid var(--line);
+  }
+  .demo-showcase h3{font-size:22px; font-weight:700; color:#fff; margin:8px 0 10px;}
+  .demo-showcase p{font-size:14.5px; color:var(--muted); max-width:520px; margin:0 auto 22px; line-height:1.6;}
   .feature-card{background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:16px; padding:28px 22px;}
   .feature-card h4{font-size:16px; font-weight:600; color:#fff; margin-bottom:8px;}
   .feature-card p{font-size:13.5px; color:var(--muted); line-height:1.55;}
@@ -1713,6 +1722,15 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     d += `- Stil: ${style.label} — ${style.desc}.\n`;
     d += `- Eckenstil: ${corner.desc}.\n`;
     d += `- Farbmodus: ${mode.desc}\n`;
+
+    if(selectedCornerId === 'rounded'){
+      d += `- Konkrete Rundungs-Skala, konsequent durchgehalten: große Container/Karten ca. 20-26px border-radius, kleinere Karten/Buttons ca. 14px, kleine Elemente wie Badges/Icons ca. 8-10px — nicht überall denselben Wert nutzen, sondern nach Elementgröße abstufen.\n`;
+    }
+    d += `- Karten-basiertes Layout: Inhalte in klar abgegrenzte Karten mit dezentem Rand (subtiler, halbtransparenter Border) und leichtem Schatten für Tiefe packen, nicht flach aneinandergereiht.\n`;
+    d += `- Kleine, farbige Icon-Badges (quadratisch mit Rundung, Akzentfarbe als Hintergrund) vor Überschriften/Navigationspunkten, wo es Sinn ergibt — sorgt für visuelle Orientierung.\n`;
+    d += `- Pill-förmige Tags/Labels (voll abgerundet, kleine Schrift, dezenter Hintergrund) für Kategorien, Status oder Kennzeichnungen nutzen, statt reinem Fließtext.\n`;
+    d += `- Sanfte Hover-/Active-Zustände bei klickbaren Elementen (leichte Farb-/Schatten-Änderung, keine harten Sprünge).\n`;
+    d += `- Insgesamt soll es wirken wie eine durchdachte, moderne Produktoberfläche (klare Hierarchie, großzügiger Weißraum, konsistente Abstände) — nicht wie eine schnell zusammengeklickte Seite.\n`;
     return d;
   }
 

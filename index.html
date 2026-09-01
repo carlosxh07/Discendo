@@ -1498,8 +1498,8 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
       hasAccess = true;
       document.getElementById('passwordGate').style.display = 'none';
       document.getElementById('salesPage').style.display = 'none';
-      document.getElementById('thankYou').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
+      document.getElementById('thankYou').style.display = 'flex';
+      triggerToolDownload();
       window.scrollTo({top: 0, behavior: 'instant'});
     } else {
       document.getElementById('passwordError').style.display = 'block';
