@@ -232,6 +232,37 @@
   .extract-summary:empty{display:none;}
   .extract-summary.warn{color:#b86e00;}
 
+  /* ---- Berater: welche Lernstoff-Option passt? ---- */
+  .advisor{border:1.5px solid var(--line-light); border-radius:14px; background:var(--paper-2); margin-bottom:18px;}
+  .advisor[open]{background:#fff; border-color:#B9CDF2; box-shadow:0 10px 24px rgba(76,141,255,.1);}
+  .advisor summary{display:flex; align-items:center; gap:14px; padding:14px 18px; cursor:pointer; list-style:none;}
+  .advisor summary::-webkit-details-marker{display:none;}
+  .advisor summary::after{content:"›"; margin-left:auto; font-size:20px; color:var(--muted-dark); transition:transform .25s var(--ease);}
+  .advisor[open] summary::after{transform:rotate(90deg);}
+  .advisor summary b{display:block; font-size:14.5px; color:var(--text-dark);}
+  .advisor summary small{display:block; font-size:12.5px; color:var(--muted-dark); margin-top:2px;}
+  .advisor-icon{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#fff; background:var(--accent); box-shadow:0 4px 14px var(--accent-glow);
+  }
+  .advisor-body{padding:4px 18px 20px;}
+  .advisor-tabs{margin-bottom:16px;}
+  .advisor-hint{font-size:13.5px; color:var(--muted-dark); line-height:1.6; margin-bottom:12px;}
+  .advisor-progress{font-size:13px; color:var(--muted-dark); margin-top:10px;}
+  .advisor-progress:empty{display:none;}
+  .advisor-q{margin-bottom:16px;}
+  .advisor-q > span{display:block; font-size:13.5px; font-weight:600; color:var(--text-dark); margin-bottom:8px;}
+  .advisor-q .pill-toggle{font-size:13px;}
+  .advisor-result{margin-top:18px; padding:20px; border-radius:14px; border:1.5px solid var(--accent); background:rgba(76,141,255,.05);}
+  .advisor-result[hidden]{display:none;}
+  .advisor-result h5{font-size:17px; font-weight:700; color:var(--text-dark); margin-bottom:8px;}
+  .advisor-result p{font-size:13.5px; color:var(--muted-dark); line-height:1.6; margin-bottom:14px; white-space:pre-line;}
+  .advisor-meter{margin-bottom:10px;}
+  .advisor-meter[hidden]{display:none;}
+  .advisor-meter-bar{height:8px; border-radius:999px; background:var(--paper-2); overflow:hidden;}
+  .advisor-meter-bar div{height:100%; border-radius:inherit; transition:width .5s var(--ease);}
+  .advisor-meter small{display:block; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted-dark); margin-top:6px;}
+
   /* ---- Design-Baukasten ---- */
   .design-box{background:#fff; border:1.5px solid var(--line-light); border-radius:18px; padding:32px; margin-bottom:32px;}
   .design-box h3{font-size:19px; font-weight:700; margin-bottom:8px; color:var(--text-dark);}
@@ -1007,6 +1038,67 @@
         <div class="section-eyebrow" style="color:var(--accent-deep);">Dein Lernstoff</div>
         <h3>Wie kommt dein Stoff in den Study Hub?</h3>
         <p>Am schnellsten: Zieh deine Original-Unterlagen einfach hier rein. Discendo liest den Text aus und packt ihn automatisch in deinen Prompt — keine Vorarbeit, kein Abtippen.</p>
+
+        <details class="advisor" id="advisor">
+          <summary>
+            <span class="advisor-icon">?</span>
+            <span><b>Nicht sicher, welche Option passt?</b><small>Lass dir in 30 Sekunden eine empfehlen</small></span>
+          </summary>
+          <div class="advisor-body">
+            <div class="pill-toggle-group advisor-tabs" id="advisorTabs">
+              <button type="button" class="pill-toggle selected" data-tab="check">Dateien prüfen lassen</button>
+              <button type="button" class="pill-toggle" data-tab="quiz">Fragen beantworten</button>
+            </div>
+
+            <div id="advisorCheck">
+              <p class="advisor-hint">Zieh einfach alle Dateien rein, die du für dieses Fach hast. Discendo prüft Umfang, Format und ob Seiten eingescannt sind — alles lokal in deinem Browser.</p>
+              <label class="extract-drop" id="advisorDrop">
+                <input type="file" id="advisorFiles" accept=".pdf,.docx,.pptx,.txt,.md,.doc,.ppt,.png,.jpg,.jpeg,application/pdf" multiple>
+                <b>Alle Dateien hier ablegen</b>
+                <span>PDF, Word, PowerPoint, Fotos …</span>
+              </label>
+              <p class="advisor-progress" id="advisorProgress"></p>
+            </div>
+
+            <div id="advisorQuiz" style="display:none;">
+              <div class="advisor-q">
+                <span>Wie viel Material ist es?</span>
+                <div class="pill-toggle-group" data-q="amount">
+                  <button type="button" class="pill-toggle" data-v="s">1–3 Dateien</button>
+                  <button type="button" class="pill-toggle" data-v="m">4–10 Dateien</button>
+                  <button type="button" class="pill-toggle" data-v="l">11–20 Dateien</button>
+                  <button type="button" class="pill-toggle" data-v="xl">Mehr / ganzes Semester</button>
+                </div>
+              </div>
+              <div class="advisor-q">
+                <span>Was für Dateien sind es?</span>
+                <div class="pill-toggle-group" data-q="kind">
+                  <button type="button" class="pill-toggle" data-v="text">PDF, Word oder PowerPoint mit normalem Text</button>
+                  <button type="button" class="pill-toggle" data-v="scan">Scans, Fotos oder Handschrift</button>
+                  <button type="button" class="pill-toggle" data-v="mixed">Gemischt</button>
+                </div>
+              </div>
+              <div class="advisor-q">
+                <span>Sind Abbildungen oder Diagramme wichtig für den Stoff?</span>
+                <div class="pill-toggle-group" data-q="visual">
+                  <button type="button" class="pill-toggle" data-v="yes">Ja, sehr (z. B. Anatomie, Schaltpläne)</button>
+                  <button type="button" class="pill-toggle" data-v="no">Eher nicht</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="advisor-result" id="advisorResult" hidden>
+              <span class="source-badge">Unsere Empfehlung</span>
+              <h5 id="advisorTitle"></h5>
+              <div class="advisor-meter" id="advisorMeterWrap" hidden>
+                <div class="advisor-meter-bar"><div id="advisorMeter"></div></div>
+                <small id="advisorMeterLabel"></small>
+              </div>
+              <p id="advisorReason"></p>
+              <button type="button" class="btn btn-primary" id="advisorApply">Diese Option wählen</button>
+            </div>
+          </div>
+        </details>
 
         <div class="source-options" id="sourceOptions">
           <button type="button" class="source-option selected" data-source="extract">
@@ -2187,6 +2279,149 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   ['dragenter', 'dragover'].forEach(t => extractDrop.addEventListener(t, e => { e.preventDefault(); extractDrop.classList.add('drag'); }));
   ['dragleave', 'drop'].forEach(t => extractDrop.addEventListener(t, e => { e.preventDefault(); extractDrop.classList.remove('drag'); }));
   extractDrop.addEventListener('drop', e => addExtractFiles(e.dataTransfer.files));
+
+  // ---- Berater: empfiehlt eine der drei Lernstoff-Optionen ----
+  // Grundlage: ~150k Tokens passen praktisch in einen Claude-Chat (Kontext minus Platz für Prompt und Antwort),
+  // max. 20 Dateien à 30 MB pro Chat; eingescannte Seiten/Fotos kann nur Claude selbst lesen.
+  const CHAT_TOKENS = 150000;
+  const OPTION_NAMES = { extract: '„Dateien hier reinziehen"', files: '„Dateien in Claude anhängen"', text: '„Text einfügen"' };
+  let advisorChoice = null;
+  let advisorAnalyzed = []; // geprüfte Dateien, werden bei "Dateien hier reinziehen" direkt übernommen
+  const quizAnswers = {};
+
+  const fmtWords = tokens => Math.round(tokens * 3.5 / 6.5).toLocaleString('de-DE');
+
+  document.querySelectorAll('#advisorTabs .pill-toggle').forEach(tab => tab.addEventListener('click', () => {
+    document.querySelectorAll('#advisorTabs .pill-toggle').forEach(t => t.classList.toggle('selected', t === tab));
+    document.getElementById('advisorCheck').style.display = tab.dataset.tab === 'check' ? 'block' : 'none';
+    document.getElementById('advisorQuiz').style.display = tab.dataset.tab === 'quiz' ? 'block' : 'none';
+    document.getElementById('advisorResult').hidden = true;
+  }));
+
+  function showAdvice(advice){
+    const box = document.getElementById('advisorResult');
+    if(!advice){ box.hidden = true; return; }
+    advisorChoice = advice.choice;
+    document.getElementById('advisorTitle').textContent = OPTION_NAMES[advice.choice];
+    document.getElementById('advisorReason').textContent = advice.reason;
+    const meterWrap = document.getElementById('advisorMeterWrap');
+    meterWrap.hidden = advice.fill == null;
+    if(advice.fill != null){
+      const pct = Math.round(advice.fill * 100);
+      const bar = document.getElementById('advisorMeter');
+      bar.style.width = Math.min(pct, 100) + '%';
+      bar.style.background = pct <= 60 ? 'var(--ok)' : (pct <= 100 ? '#E0A100' : '#E14B4B');
+      document.getElementById('advisorMeterLabel').textContent = pct <= 100
+        ? (pct < 1 ? 'Claude-Chat zu unter 1 % gefüllt' : `Claude-Chat zu ca. ${pct} % gefüllt`)
+        : `ca. ${pct} % — passt nicht in einen Chat`;
+    }
+    document.getElementById('advisorApply').textContent = advice.choice === 'extract' && advisorAnalyzed.length ? 'Übernehmen — Dateien sind schon drin' : 'Diese Option wählen';
+    box.hidden = false;
+  }
+
+  // -- Weg 1: Dateien prüfen --
+  async function analyzeForAdvice(fileList){
+    const files = Array.from(fileList);
+    if(!files.length) return;
+    const progress = document.getElementById('advisorProgress');
+    document.getElementById('advisorResult').hidden = true;
+    advisorAnalyzed = [];
+    for(let i = 0; i < files.length; i++){
+      const file = files[i];
+      progress.textContent = `Prüfe Datei ${i + 1} von ${files.length}: ${file.name} …`;
+      const entry = { name: file.name, size: file.size, kind: 'text', text: '', status: 'ok', info: '' };
+      if(/\.(png|jpe?g|heic|webp|gif)$/i.test(file.name) || /^image\//.test(file.type)){
+        entry.kind = 'image'; entry.status = 'err'; entry.info = 'Bild — nur in Claude lesbar';
+      } else {
+        try {
+          const r = await readAnyFile(file);
+          entry.text = r.text.trim();
+          if(r.warn){ entry.kind = 'scan'; entry.status = 'warn'; entry.info = `${r.info} · ${r.warn}`; }
+          else entry.info = `✓ ${r.info}`;
+        } catch(e){
+          entry.kind = /\.(doc|ppt)$/i.test(file.name) ? 'old' : 'error';
+          entry.status = 'err';
+          entry.info = e && e.message && e.message.length < 90 ? e.message : 'konnte nicht gelesen werden';
+        }
+      }
+      advisorAnalyzed.push(entry);
+    }
+    progress.textContent = '';
+    showAdvice(adviceFromFiles(advisorAnalyzed));
+  }
+
+  function adviceFromFiles(list){
+    const n = list.length;
+    const tokens = Math.round(list.reduce((s, f) => s + f.text.length, 0) / 3.5);
+    const visual = list.filter(f => f.kind === 'scan' || f.kind === 'image').length;
+    const old = list.filter(f => f.kind === 'old').length;
+    const tooLargeForClaude = list.some(f => f.size > 30 * 1024 * 1024);
+    const fill = tokens / CHAT_TOKENS;
+    const blocks = Math.max(2, Math.ceil(tokens / (CHAT_TOKENS * 0.8)));
+    const oldNote = old ? `\n\nHinweis: ${old} ${old === 1 ? 'Datei ist' : 'Dateien sind'} im alten Office-Format (.doc/.ppt) — bitte als PDF speichern und nachreichen.` : '';
+
+    if(visual > 0){
+      if(n <= 20 && !tooLargeForClaude && fill <= 1){
+        return { choice: 'files', fill: null, reason: `${visual} von ${n} Dateien ${visual === 1 ? 'ist' : 'sind'} eingescannt oder ${visual === 1 ? 'ein Bild' : 'Bilder'}. Deren Inhalt kann Discendo nicht als Text auslesen — Claude kann solche Seiten aber lesen, wenn du die Dateien direkt im Chat anhängst.` + oldNote };
+      }
+      return { choice: 'files', fill: null, reason: `Ein Teil deiner Dateien ist eingescannt oder besteht aus Bildern — das kann nur Claude selbst lesen. Für einen einzelnen Chat ist es aber zu viel (max. 20 Dateien à 30 MB und begrenzter Umfang). Teil das Material deshalb in ${blocks} Blöcke (z. B. nach Kapiteln), bau pro Block einen Hub und führ sie am Ende mit dem Zusammenführungs-Prompt weiter unten zusammen.` + oldNote };
+    }
+    if(fill > 1){
+      return { choice: 'text', fill, reason: `Zusammen ca. ${fmtWords(tokens)} Wörter — mehr, als Claude in einem Chat vollständig verarbeiten kann. Am besten lässt du dir den Stoff in ${blocks} Blöcken (z. B. nach Kapiteln) in separaten Chats zusammenfassen — Anleitung und passender Prompt kommen gleich — und fügst die Zusammenfassungen hier ein. Alternativ baust du pro Block einen eigenen Hub und führst sie später zusammen.` + oldNote };
+    }
+    if(selected.includes('Beschriftungs-Trainer') && n <= 20 && !tooLargeForClaude){
+      return { choice: 'files', fill, reason: `Du hast den Beschriftungs-Trainer gewählt — dafür muss Claude die Abbildungen in deinen Unterlagen sehen. Beim Auslesen gehen Bilder verloren, deshalb hängst du die Dateien hier besser direkt in Claude an.` + oldNote };
+    }
+    return { choice: 'extract', fill, reason: `Alles gut lesbar: ${n} ${n === 1 ? 'Datei' : 'Dateien'} mit zusammen ca. ${fmtWords(tokens)} Wörtern — das passt in einen Chat. Discendo packt den Text automatisch in deinen Prompt; die Dateien sind schon geprüft und werden direkt übernommen.` + oldNote };
+  }
+
+  const advisorDrop = document.getElementById('advisorDrop');
+  document.getElementById('advisorFiles').addEventListener('change', e => { analyzeForAdvice(e.target.files); e.target.value = ''; });
+  ['dragenter', 'dragover'].forEach(t => advisorDrop.addEventListener(t, e => { e.preventDefault(); advisorDrop.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach(t => advisorDrop.addEventListener(t, e => { e.preventDefault(); advisorDrop.classList.remove('drag'); }));
+  advisorDrop.addEventListener('drop', e => analyzeForAdvice(e.dataTransfer.files));
+
+  // -- Weg 2: drei Fragen --
+  document.querySelectorAll('#advisorQuiz .pill-toggle-group').forEach(group => {
+    group.querySelectorAll('.pill-toggle').forEach(btn => btn.addEventListener('click', () => {
+      group.querySelectorAll('.pill-toggle').forEach(b => b.classList.toggle('selected', b === btn));
+      quizAnswers[group.dataset.q] = btn.dataset.v;
+      advisorAnalyzed = [];
+      showAdvice(adviceFromQuiz(quizAnswers));
+    }));
+  });
+
+  function adviceFromQuiz(a){
+    if(!a.amount || !a.kind || !a.visual) return null;
+    const needsClaudeEyes = a.kind !== 'text' || a.visual === 'yes';
+    if(needsClaudeEyes){
+      const why = a.kind === 'scan' ? 'Eingescannte Seiten, Fotos und Handschrift kann Discendo nicht als Text auslesen — Claude kann sie aber lesen, wenn du die Dateien direkt anhängst.'
+        : a.kind === 'mixed' ? 'Bei gemischtem Material würden eingescannte Teile beim Auslesen fehlen. Hängst du die Dateien direkt in Claude an, liest Claude alles — auch Scans.'
+        : 'Wenn Abbildungen wichtig sind, sollte Claude sie sehen. Beim Auslesen geht nur der Text mit, deshalb hängst du die Dateien besser direkt an.';
+      const split = (a.amount === 'xl') ? '\n\nBei so viel Material: Teil es in Blöcke von höchstens 20 Dateien (z. B. nach Kapiteln), bau pro Block einen Hub und führ sie am Ende mit dem Zusammenführungs-Prompt zusammen.' : '';
+      return { choice: 'files', reason: why + split };
+    }
+    if(a.amount === 'xl'){
+      return { choice: 'text', reason: 'Ein ganzes Semester ist zu viel für einen einzelnen Chat. Lass dir den Stoff blockweise (z. B. pro Kapitel) in separaten Chats zusammenfassen — Anleitung und passender Prompt kommen gleich — und füg die Zusammenfassungen hier ein.' };
+    }
+    return { choice: 'extract', reason: 'Normale Text-Dateien kann Discendo direkt auslesen und automatisch in deinen Prompt packen — der schnellste Weg.' + (a.amount === 'l' ? ' Nach dem Reinziehen siehst du, ob alles in einen Chat passt; falls nicht, sagt Discendo dir Bescheid.' : '') };
+  }
+
+  // -- Empfehlung übernehmen --
+  document.getElementById('advisorApply').addEventListener('click', () => {
+    if(!advisorChoice) return;
+    document.querySelector(`#sourceOptions .source-option[data-source="${advisorChoice}"]`).click();
+    if(advisorChoice === 'extract' && advisorAnalyzed.length){
+      advisorAnalyzed.filter(f => f.kind !== 'image').forEach(f => {
+        if(extractedFiles.some(x => x.name === f.name)) return;
+        extractedFiles.push({ id: ++extractIdCounter, name: f.name, text: f.text, status: f.status, info: f.info });
+      });
+      renderExtractList();
+      render();
+    }
+    document.getElementById('advisor').open = false;
+    document.getElementById('sourceOptions').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   document.getElementById('buildBtn').addEventListener('click', () => {
     const prompt = buildPrompt();
