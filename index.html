@@ -744,6 +744,18 @@
     box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 24px 60px rgba(10,24,48,.3);
   }
   .glow-wrap{-webkit-mask-image:linear-gradient(to bottom, #000 65%, transparent); mask-image:linear-gradient(to bottom, #000 65%, transparent);}
+  /* Buttons auf hellem Grund: dunkle Schrift statt Glas-Weiß (sonst unsichtbar) */
+  #builder .btn-ghost, .design-box .btn-ghost{
+    background:#fff; color:var(--text-dark); border:1px solid var(--line-light);
+    box-shadow:0 2px 8px rgba(16,24,43,.06); backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  #builder .btn-ghost:hover, .design-box .btn-ghost:hover{background:#fff; border-color:#B9CDF2;}
+  #builder .btn-ghost::before, #builder .btn-ghost::after, .design-box .btn-ghost::before, .design-box .btn-ghost::after{display:none;}
+  .back-link{
+    display:inline-block; margin-bottom:20px; padding:4px 0; border:none; background:none; cursor:pointer;
+    font:inherit; font-size:14px; font-weight:600; color:var(--accent-deep);
+  }
+  .back-link:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -1205,12 +1217,12 @@
       </div>
 
       <div id="categoryView" style="display:none;">
-        <button id="backToTrack" class="btn btn-ghost" style="margin-bottom:20px;">← Zurück</button>
+        <button id="backToTrack" class="back-link">← Zurück</button>
         <div class="category-grid" id="categoryGrid"></div>
       </div>
 
       <div id="detailView" style="display:none;">
-        <button id="backToCategories" class="btn btn-ghost" style="margin-bottom:20px;">← Alle Bereiche</button>
+        <button id="backToCategories" class="back-link">← Alle Bereiche</button>
         <div class="program-grid" id="programGrid"></div>
       </div>
 
@@ -1354,17 +1366,17 @@
 
         <div class="source-options" id="sourceOptions">
           <button type="button" class="source-option selected" data-source="extract">
-            <span class="source-badge">Empfohlen</span>
+            <span class="source-badge" data-label="Für Text-Dateien">Empfohlen</span>
             <h5>Dateien hier reinziehen</h5>
             <p>PDF, Word oder PowerPoint: Discendo liest den Text aus und packt ihn automatisch in deinen Prompt. Einmal kopieren, fertig.</p>
           </button>
           <button type="button" class="source-option" data-source="files">
-            <span class="source-badge muted">Für Scans & Diagramme</span>
+            <span class="source-badge muted" data-label="Für Scans & Diagramme">Für Scans & Diagramme</span>
             <h5>Dateien in Claude anhängen</h5>
             <p>Du hängst die Dateien selbst im Claude-Chat an. Dann sieht Claude auch Abbildungen, Diagramme und eingescannte Seiten.</p>
           </button>
           <button type="button" class="source-option" data-source="text">
-            <span class="source-badge muted">Eigene Zusammenfassung</span>
+            <span class="source-badge muted" data-label="Eigene Zusammenfassung">Eigene Zusammenfassung</span>
             <h5>Text einfügen</h5>
             <p>Du hast schon eine Zusammenfassung oder willst ein ganzes Semester in Etappen vorbereiten? Dann füg den Text hier ein.</p>
           </button>
@@ -1392,7 +1404,7 @@
           </ol>
           <div class="tutorial-tip" style="margin-top:0;">
             <b>Tipps für das beste Ergebnis</b>
-            PowerPoint-Folien am besten vorher als <b style="display:inline; margin:0; font-size:inherit;">PDF exportieren</b> — dann erkennt Claude auch Diagramme, Abbildungen und Formeln auf den Folien. Pro Chat gehen bis zu 20 Dateien (je max. 30 MB), insgesamt etwa 500 Seiten Text. Bei mehr Material: Bau pro Kapitel oder Themenblock einen Hub und führ sie später mit dem <b style="display:inline; margin:0; font-size:inherit;">Zusammenführungs-Prompt</b> weiter unten zu einem zusammen — oder wechsel auf „Eigene Zusammenfassung einfügen".
+            PowerPoint-Folien am besten vorher als <b style="display:inline; margin:0; font-size:inherit;">PDF exportieren</b> — dann erkennt Claude auch Diagramme, Abbildungen und Formeln auf den Folien. Pro Chat gehen bis zu 20 Dateien (je max. 30 MB), insgesamt etwa 500 Seiten Text. Bei mehr Material: Bau pro Kapitel oder Themenblock einen Hub und führ sie später mit dem <b style="display:inline; margin:0; font-size:inherit;">Zusammenführungs-Prompt</b> weiter unten zu einem zusammen — oder wechsel auf „Text einfügen".
           </div>
         </div>
 
@@ -2693,6 +2705,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     const box = document.getElementById('advisorResult');
     if(!advice){ box.hidden = true; return; }
     advisorChoice = advice.choice;
+    setRecommendedOption(advice.choice);
     document.getElementById('advisorTitle').textContent = OPTION_NAMES[advice.choice];
     document.getElementById('advisorReason').textContent = advice.reason;
     const meterWrap = document.getElementById('advisorMeterWrap');
@@ -2708,6 +2721,15 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     }
     document.getElementById('advisorApply').textContent = advice.choice === 'extract' && advisorAnalyzed.length ? 'Übernehmen — Dateien sind schon drin' : 'Diese Option wählen';
     box.hidden = false;
+  }
+
+  function setRecommendedOption(choice){
+    document.querySelectorAll('#sourceOptions .source-option').forEach(opt => {
+      const badge = opt.querySelector('.source-badge');
+      const isRec = opt.dataset.source === choice;
+      badge.textContent = isRec ? 'Empfohlen' : badge.dataset.label;
+      badge.classList.toggle('muted', !isRec);
+    });
   }
 
   // -- Weg 1: Dateien prüfen --
@@ -2784,18 +2806,25 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 
   function adviceFromQuiz(a){
     if(!a.amount || !a.kind || !a.visual) return null;
-    const needsClaudeEyes = a.kind !== 'text' || a.visual === 'yes';
-    if(needsClaudeEyes){
-      const why = a.kind === 'scan' ? 'Eingescannte Seiten, Fotos und Handschrift kann Discendo nicht als Text auslesen — Claude kann sie aber lesen, wenn du die Dateien direkt anhängst.'
-        : a.kind === 'mixed' ? 'Bei gemischtem Material würden eingescannte Teile beim Auslesen fehlen. Hängst du die Dateien direkt in Claude an, liest Claude alles — auch Scans.'
-        : 'Wenn Abbildungen wichtig sind, sollte Claude sie sehen. Beim Auslesen geht nur der Text mit, deshalb hängst du die Dateien besser direkt an.';
-      const split = (a.amount === 'xl') ? '\n\nBei so viel Material: Teil es in Blöcke von höchstens 20 Dateien (z. B. nach Kapiteln), bau pro Block einen Hub und führ sie am Ende mit dem Zusammenführungs-Prompt zusammen.' : '';
-      return { choice: 'files', reason: why + split };
+
+    // Claude muss selbst "hinschauen", sobald Scans/Fotos/Handschrift dabei sind oder Abbildungen wichtig sind —
+    // beim Auslesen durch Discendo ginge nur der reine Text mit.
+    if(a.kind !== 'text' || a.visual === 'yes'){
+      const why = a.kind === 'scan' ? 'Eingescannte Seiten, Fotos und Handschrift kann Discendo nicht als Text auslesen — Claude kann sie aber lesen, wenn du die Dateien direkt im Chat anhängst.'
+        : a.kind === 'mixed' ? 'In deinem Material sind auch Scans oder Fotos. Die würden beim Auslesen durch Discendo fehlen — hängst du die Dateien direkt in Claude an, liest Claude alles, auch die gescannten Seiten.'
+        : 'Da Abbildungen und Diagramme wichtig sind, sollte Claude sie sehen. Beim Auslesen durch Discendo geht nur der Text mit, deshalb hängst du die Dateien besser direkt in Claude an.';
+      const size = a.amount === 'xl' ? '\n\nBei so viel Material: Teil es in Blöcke von höchstens 20 Dateien (z. B. nach Kapiteln), bau pro Block einen Hub und führ sie am Ende mit dem Zusammenführungs-Prompt weiter unten zusammen.'
+        : a.amount === 'l' ? '\n\nBis zu 20 Dateien passen in einen Chat. Sind es sehr lange Skripte, teil sie lieber auf zwei Chats auf und führ die Hubs danach zusammen.'
+        : '';
+      return { choice: 'files', reason: why + size };
     }
+
+    // Normale Text-Dateien, Abbildungen nicht entscheidend
     if(a.amount === 'xl'){
-      return { choice: 'text', reason: 'Ein ganzes Semester ist zu viel für einen einzelnen Chat. Lass dir den Stoff blockweise (z. B. pro Kapitel) in separaten Chats zusammenfassen — Anleitung und passender Prompt kommen gleich — und füg die Zusammenfassungen hier ein.' };
+      return { choice: 'text', reason: 'Ein ganzes Semester ist zu viel, als dass Claude es in einem Chat vollständig verarbeiten kann. Lass dir den Stoff deshalb blockweise (z. B. pro Kapitel) in separaten Chats zusammenfassen — Anleitung und passender Prompt kommen gleich — und füg die Zusammenfassungen hier ein. Alternativ: pro Kapitel einen eigenen Hub bauen und die Hubs später zusammenführen.' };
     }
-    return { choice: 'extract', reason: 'Normale Text-Dateien kann Discendo direkt auslesen und automatisch in deinen Prompt packen — der schnellste Weg.' + (a.amount === 'l' ? ' Nach dem Reinziehen siehst du, ob alles in einen Chat passt; falls nicht, sagt Discendo dir Bescheid.' : '') };
+    const check = a.amount === 's' ? '' : ' Nach dem Reinziehen zeigt dir Discendo, ob alles in einen Chat passt — falls nicht, sagt es dir Bescheid, und du teilst das Material einfach auf.';
+    return { choice: 'extract', reason: 'Normale Text-Dateien kann Discendo direkt auslesen und automatisch in deinen Prompt packen — der schnellste Weg, ohne Vorarbeit.' + check };
   }
 
   // -- Empfehlung übernehmen --
