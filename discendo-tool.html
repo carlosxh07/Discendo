@@ -192,7 +192,7 @@
   .tutorial-tip b{color:var(--text-dark); display:block; margin-bottom:6px; font-size:14px;}
 
   /* ---- Lernstoff-Quelle: Dateien direkt oder eigene Zusammenfassung ---- */
-  .source-options{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:26px;}
+  .source-options{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:26px;}
   .source-option{
     position:relative; text-align:left; background:#fff; border:1.5px solid var(--line-light); border-radius:14px;
     padding:18px 20px; cursor:pointer; font:inherit; color:var(--text-dark); transition:.2s;
@@ -210,6 +210,27 @@
     .source-options{grid-template-columns:1fr;}
   }
 
+
+  .extract-drop{
+    display:flex; flex-direction:column; align-items:center; gap:4px; padding:28px 16px; border-radius:14px; cursor:pointer; text-align:center;
+    border:1.5px dashed #B9CDF2; background:rgba(76,141,255,.05); transition:background .2s, border-color .2s;
+  }
+  .extract-drop:hover, .extract-drop.drag{background:rgba(76,141,255,.11); border-color:var(--accent);}
+  .extract-drop input{display:none;}
+  .extract-drop b{font-size:15px; color:var(--text-dark);}
+  .extract-drop span{font-size:12.5px; color:var(--muted-dark);}
+  .extract-list{list-style:none; margin-top:12px; display:flex; flex-direction:column; gap:6px;}
+  .extract-list li{display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; background:var(--paper-2); border:1px solid var(--line-light); font-size:13.5px;}
+  .extract-list .ex-name{font-weight:600; color:var(--text-dark); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; flex:1;}
+  .extract-list .ex-info{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted-dark); flex-shrink:0;}
+  .extract-list .ex-info.ok{color:#1e8e4f;}
+  .extract-list .ex-info.warn{color:#b86e00;}
+  .extract-list .ex-info.err{color:#d92c1f;}
+  .extract-list .ex-remove{flex-shrink:0; border:none; background:none; cursor:pointer; font-size:16px; line-height:1; color:var(--muted-dark); padding:2px 4px;}
+  .extract-list .ex-remove:hover{color:var(--text-dark);}
+  .extract-summary{font-size:13px; color:var(--muted-dark); margin-top:10px; line-height:1.5;}
+  .extract-summary:empty{display:none;}
+  .extract-summary.warn{color:#b86e00;}
 
   /* ---- Design-Baukasten ---- */
   .design-box{background:#fff; border:1.5px solid var(--line-light); border-radius:18px; padding:32px; margin-bottom:32px;}
@@ -814,7 +835,7 @@
   <div>
     <div class="eyebrow">Baukasten für Schule, Studium & Ausbildung</div>
     <h1>Bau dir deinen<br>Study Hub. <span>Baustein für Baustein.</span></h1>
-    <p>Kein fertiges Produkt von der Stange. Du wählst, was dein Fach wirklich braucht — Zusammenfassungen, Flashcards, Quiz, Zuordnungen oder ein Schwachstellen-Radar für Auswendiglern-Fächer. Am Ende bekommst du einen fertigen Prompt für Claude — du hängst nur noch deine Unterlagen an.</p>
+    <p>Kein fertiges Produkt von der Stange. Du wählst, was dein Fach wirklich braucht — Zusammenfassungen, Flashcards, Quiz, Zuordnungen oder ein Schwachstellen-Radar für Auswendiglern-Fächer. Du ziehst deine Unterlagen rein und bekommst einen fertigen Prompt für Claude — mit deinem Stoff schon drin.</p>
     <div class="hero-actions">
       <a href="#builder" class="btn btn-primary">Baukasten starten →</a>
       <a href="#how" class="btn btn-ghost">So funktioniert's</a>
@@ -865,8 +886,8 @@
       </div>
       <div class="step">
         <div class="step-num">03 — STOFF MITGEBEN</div>
-        <h3>Unterlagen einfach reinwerfen</h3>
-        <p>PDFs, Folien, Skripte oder Mitschriften hängst du direkt an den Prompt an — Claude liest alles selbst aus. Keine Vorarbeit nötig.</p>
+        <h3>Unterlagen einfach reinziehen</h3>
+        <p>PDFs, Word- oder PowerPoint-Dateien reinziehen — Discendo liest den Text aus und packt ihn automatisch in deinen Prompt. Keine Vorarbeit nötig.</p>
       </div>
       <div class="step">
         <div class="step-num">04 — PROMPT ERHALTEN</div>
@@ -985,22 +1006,41 @@
       <div class="tutorial-box">
         <div class="section-eyebrow" style="color:var(--accent-deep);">Dein Lernstoff</div>
         <h3>Wie kommt dein Stoff in den Study Hub?</h3>
-        <p>Am schnellsten: Du wirfst deine Original-Unterlagen einfach direkt zusammen mit dem Prompt in Claude. Keine Vorarbeit, kein Abtippen, kein Zwischenschritt.</p>
+        <p>Am schnellsten: Zieh deine Original-Unterlagen einfach hier rein. Discendo liest den Text aus und packt ihn automatisch in deinen Prompt — keine Vorarbeit, kein Abtippen.</p>
 
         <div class="source-options" id="sourceOptions">
-          <button type="button" class="source-option selected" data-source="files">
+          <button type="button" class="source-option selected" data-source="extract">
             <span class="source-badge">Empfohlen</span>
-            <h5>Dateien direkt hochladen</h5>
-            <p>PDFs, Folien, Skripte, Word-Dateien — einfach mit dem Prompt in den Claude-Chat ziehen. Claude liest alles selbst aus und baut daraus deinen Hub.</p>
+            <h5>Dateien hier reinziehen</h5>
+            <p>PDF, Word oder PowerPoint: Discendo liest den Text aus und packt ihn automatisch in deinen Prompt. Einmal kopieren, fertig.</p>
+          </button>
+          <button type="button" class="source-option" data-source="files">
+            <span class="source-badge muted">Für Scans & Diagramme</span>
+            <h5>Dateien in Claude anhängen</h5>
+            <p>Du hängst die Dateien selbst im Claude-Chat an. Dann sieht Claude auch Abbildungen, Diagramme und eingescannte Seiten.</p>
           </button>
           <button type="button" class="source-option" data-source="text">
-            <span class="source-badge muted">Für viel Material</span>
-            <h5>Eigene Zusammenfassung einfügen</h5>
+            <span class="source-badge muted">Eigene Zusammenfassung</span>
+            <h5>Text einfügen</h5>
             <p>Du hast schon eine Zusammenfassung oder willst ein ganzes Semester in Etappen vorbereiten? Dann füg den Text hier ein.</p>
           </button>
         </div>
 
-        <div id="filesModeInfo">
+        <div id="extractModeInfo">
+          <label class="extract-drop" id="extractDrop">
+            <input type="file" id="extractFiles" accept=".pdf,.docx,.pptx,.txt,.md,application/pdf" multiple>
+            <b>Dateien hier ablegen</b>
+            <span>oder klicken zum Auswählen · PDF, Word (.docx), PowerPoint (.pptx), Text</span>
+          </label>
+          <ul class="extract-list" id="extractList"></ul>
+          <p class="extract-summary" id="extractSummary"></p>
+          <div class="tutorial-tip" style="margin-top:16px;">
+            <b>Gut zu wissen</b>
+            Das Auslesen passiert komplett in deinem Browser, deine Dateien werden nirgendwo hochgeladen. Übernommen wird nur der Text: Abbildungen und Diagramme fehlen, und eingescannte PDFs enthalten oft gar keinen Text. Für solche Dateien wähl lieber „Dateien in Claude anhängen".
+          </div>
+        </div>
+
+        <div id="filesModeInfo" style="display:none;">
           <ol class="tutorial-steps">
             <li><div>Stell unten deine Module zusammen und klick auf <b>„Prompt erstellen"</b>.</div></li>
             <li><div>Öffne einen <b>neuen Claude-Chat</b>, füg den Prompt ein und häng deine Dateien <b>in derselben Nachricht</b> an (Büroklammer-Symbol oder Drag & Drop).</div></li>
@@ -1178,7 +1218,7 @@
       <div class="step">
         <div class="step-num">01 — PROMPT EINFÜGEN</div>
         <h3>In Claude einfügen</h3>
-        <p>Öffne einen neuen Chat auf claude.ai, füg den kompletten Prompt ein und häng deine Unterlagen (PDFs, Folien, Skripte) in derselben Nachricht an. Module und Design-Wahl sind schon eingebaut.</p>
+        <p>Öffne einen neuen Chat auf claude.ai und füg den kompletten Prompt ein — dein Lernstoff, deine Module und deine Design-Wahl sind schon eingebaut. (Nur falls du „Dateien in Claude anhängen" gewählt hast: die Dateien in derselben Nachricht mitschicken.)</p>
       </div>
       <div class="step">
         <div class="step-num">02 — CLAUDE BAUT DEN CODE</div>
@@ -1625,7 +1665,8 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   const contentInput = document.getElementById('contentInput');
 
   let selected = [];
-  let sourceMode = 'files';
+  let sourceMode = 'extract';
+  let extractedFiles = []; // { id, name, text, status: 'loading'|'ok'|'warn'|'err', info }
   let currentProgram = null;
 
   const moduleInstructions = {
@@ -1887,15 +1928,31 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     return d;
   }
 
-  function buildFilesIntro(){
-    let p = `Ich habe dir mein komplettes Lernmaterial als Dateien direkt an diese Nachricht angehängt (z. B. Skripte, Foliensätze als PDF, Mitschriften, Word-Dateien). Das ist die einzige inhaltliche Grundlage für den Study Hub.\n\n`;
-    p += `Bevor du mit dem Bauen anfängst, geh so vor:\n`;
-    p += `1. Lies wirklich alle angehängten Dateien vollständig durch — jede Seite und jede Folie, auch Abbildungen, Diagramme, Tabellen und Formeln, nicht nur den Anfang oder einzelne Stichproben.\n`;
+  function buildReadingSteps(where){
+    let p = `Bevor du mit dem Bauen anfängst, geh so vor:\n`;
+    p += `1. Lies wirklich alle ${where} vollständig durch — jede Seite und jede Folie, auch Tabellen und Formeln, nicht nur den Anfang oder einzelne Stichproben.\n`;
     p += `2. Erstell dir daraus intern eine vollständige, nach Kapiteln bzw. Themen gegliederte Stoffübersicht. ${summaryFocus()}\n`;
     p += `3. Nenn mir vor dem Code ganz kurz, welche Dateien du gelesen hast und welche Kapitel/Themen du daraus erkannt hast, damit ich sehe, dass nichts fehlt.\n`;
-    p += `4. Falls eine Datei nicht lesbar ist (z. B. ein eingescanntes Dokument ohne erkennbaren Text) oder das Material zu umfangreich ist, um es vollständig zu verarbeiten: Sag mir das ehrlich und konkret, statt Inhalte stillschweigend wegzulassen oder zu erfinden — und schlag mir vor, wie ich das Material sinnvoll aufteilen kann.\n`;
+    p += `4. Falls etwas nicht lesbar oder unvollständig wirkt oder das Material zu umfangreich ist, um es vollständig zu verarbeiten: Sag mir das ehrlich und konkret, statt Inhalte stillschweigend wegzulassen oder zu erfinden — und schlag mir vor, wie ich das Material sinnvoll aufteilen kann.\n`;
     p += `5. Bau erst danach den Study Hub. Alle Inhalte in allen Modulen (Karten, Fragen, Beispiele, Glossar-Einträge usw.) sollen direkt aus meinen Unterlagen stammen und möglichst den gesamten Stoff abdecken, nicht nur ausgewählte Teile.\n\n`;
     return p;
+  }
+
+  function buildFilesIntro(){
+    let p = `Ich habe dir mein komplettes Lernmaterial als Dateien direkt an diese Nachricht angehängt (z. B. Skripte, Foliensätze als PDF, Mitschriften, Word-Dateien). Das ist die einzige inhaltliche Grundlage für den Study Hub. Achte beim Lesen auch auf Abbildungen und Diagramme.\n\n`;
+    return p + buildReadingSteps('angehängten Dateien');
+  }
+
+  function buildExtractIntro(){
+    const n = extractedFiles.filter(f => f.text).length;
+    let p = `Ganz unten in dieser Nachricht findest du den vollständigen Text meiner Lernunterlagen (${n === 1 ? 'eine Datei' : n + ' Dateien'}, z. B. Skripte, Foliensätze, Mitschriften). Der Text wurde automatisch aus den Dateien ausgelesen: Abbildungen und Diagramme fehlen, und Formeln, Tabellen oder Aufzählungen können dabei verrutscht sein. Das ist die einzige inhaltliche Grundlage für den Study Hub.\n\n`;
+    return p + buildReadingSteps('Unterlagen unten');
+  }
+
+  function buildExtractMaterial(){
+    return extractedFiles.filter(f => f.text).map((f, i) =>
+      `=== Datei ${i + 1}: ${f.name} ===\n${f.text}`
+    ).join('\n\n');
   }
 
   function summaryFocus(){
@@ -1909,6 +1966,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
 
     let p = `Ich lerne für das Fach: ${subj}.\n\n`;
     if(sourceMode === 'files') p += buildFilesIntro();
+    if(sourceMode === 'extract') p += buildExtractIntro();
     p += `Bau mir daraus einen interaktiven Study Hub als einzelne HTML-Datei — ein eigenständiges Design, keine Standard-Vorlage.\n\n`;
     p += `Diese Module sollen enthalten sein:\n`;
     selected.forEach(m => { p += `- ${m}: ${moduleInstructions[m]}\n`; });
@@ -1917,6 +1975,8 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     qualityStandards.forEach(q => { p += `- ${q}\n`; });
     if(sourceMode === 'files'){
       p += `\nZur Erinnerung: Mein Lernstoff steckt in den angehängten Dateien — lies sie zuerst vollständig, dann bau den Hub.`;
+    } else if(sourceMode === 'extract'){
+      p += `\nHier ist der Text meiner Unterlagen:\n\n${buildExtractMaterial()}\n\n=== Ende der Unterlagen ===\n\nZur Erinnerung: Lies zuerst alles oben vollständig, nenn mir kurz die erkannten Dateien und Themen, und bau dann den Study Hub wie beschrieben.`;
     } else {
       p += `\nHier ist mein bereits zusammengefasster Lernstoff, den du als Grundlage nutzen sollst:\n\n"""\n${content}\n"""`;
     }
@@ -1924,6 +1984,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   }
 
   function contentReady(){
+    if(sourceMode === 'extract') return extractedFiles.length > 0 && extractedFiles.every(f => f.status !== 'loading') && extractedFiles.some(f => f.text);
     return sourceMode === 'files' || contentInput.value.trim().length > 0;
   }
 
@@ -1931,6 +1992,7 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     el.addEventListener('click', () => {
       sourceMode = el.dataset.source;
       document.querySelectorAll('#sourceOptions .source-option').forEach(o => o.classList.toggle('selected', o === el));
+      document.getElementById('extractModeInfo').style.display = sourceMode === 'extract' ? 'block' : 'none';
       document.getElementById('filesModeInfo').style.display = sourceMode === 'files' ? 'block' : 'none';
       document.getElementById('textModeInfo').style.display = sourceMode === 'text' ? 'block' : 'none';
       document.getElementById('contentField').style.display = sourceMode === 'text' ? 'block' : 'none';
@@ -1948,7 +2010,9 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
     }
 
     bomCount.textContent = selected.length;
-    bomContentStatus.textContent = sourceMode === 'files' ? 'Datei-Upload' : (contentInput.value.trim().length > 0 ? 'eingefügt' : 'fehlt noch');
+    bomContentStatus.textContent = sourceMode === 'files' ? 'Datei-Upload'
+      : sourceMode === 'extract' ? (extractedFiles.some(f => f.status === 'loading') ? 'wird gelesen …' : (extractedFiles.some(f => f.text) ? extractedFiles.filter(f => f.text).length + (extractedFiles.filter(f => f.text).length === 1 ? ' Datei' : ' Dateien') : 'fehlt noch'))
+      : (contentInput.value.trim().length > 0 ? 'eingefügt' : 'fehlt noch');
 
     const subj = subjectInput.value.trim();
     bomSubject.textContent = subj || 'Noch kein Fach gewählt';
@@ -1966,6 +2030,163 @@ Meine aktuelle Study-Hub-Datei lade ich dir gleich hier im Chat als Anhang mit h
   subjectInput.addEventListener('input', render);
   contentInput.addEventListener('input', render);
   render();
+
+  // ---- Dateien direkt im Browser auslesen (PDF, Word, PowerPoint, Text) ----
+  // Nichts wird hochgeladen: pdf.js und JSZip laufen lokal, der Text landet nur im Prompt.
+  // Die Bibliotheken liegen auf discendo.de/vendor; die heruntergeladene Tool-Datei lädt sie von dort.
+  const VENDOR_BASE = location.protocol.startsWith('http') ? new URL('vendor/', location.href).href : 'https://discendo.de/vendor/';
+  const scriptPromises = {};
+  let extractIdCounter = 0;
+  let extractQueue = Promise.resolve();
+
+  function loadVendorScript(file){
+    if(!scriptPromises[file]) scriptPromises[file] = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = VENDOR_BASE + file;
+      el.onload = resolve;
+      el.onerror = () => { delete scriptPromises[file]; el.remove(); reject(new Error('Lese-Werkzeug konnte nicht geladen werden — bist du online?')); };
+      document.head.appendChild(el);
+    });
+    return scriptPromises[file];
+  }
+
+  async function readPdf(file){
+    await loadVendorScript('pdf.min.js');
+    const pdfjs = window.pdfjsLib;
+    pdfjs.GlobalWorkerOptions.workerSrc = VENDOR_BASE + 'pdf.worker.min.js';
+    const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const pages = [];
+    let chars = 0;
+    for(let i = 1; i <= doc.numPages; i++){
+      const content = await (await doc.getPage(i)).getTextContent();
+      const text = content.items.map(it => (it.str || '') + (it.hasEOL ? '\n' : '')).join('').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+      chars += text.length;
+      if(text) pages.push(`[Seite ${i}]\n${text}`);
+    }
+    const scanned = chars < doc.numPages * 40;
+    return {
+      text: pages.join('\n\n'),
+      info: `${doc.numPages} ${doc.numPages === 1 ? 'Seite' : 'Seiten'}`,
+      warn: scanned ? 'kaum Text gefunden — eingescannt? Dann lieber in Claude anhängen' : ''
+    };
+  }
+
+  // Absätze aus Office-XML: Text-Runs sammeln, Tabs/Umbrüche erhalten
+  function officeParagraphs(xml, pTag, tTag){
+    const doc = new DOMParser().parseFromString(xml, 'application/xml');
+    return Array.from(doc.getElementsByTagName(pTag)).map(p => {
+      let t = '';
+      for(const el of p.getElementsByTagName('*')){
+        if(el.nodeName === tTag) t += el.textContent;
+        else if(el.nodeName === 'w:tab') t += '\t';
+        else if(el.nodeName === 'w:br' || el.nodeName === 'a:br') t += '\n';
+      }
+      return t;
+    }).filter(t => t.trim()).join('\n');
+  }
+
+  async function readDocx(file){
+    await loadVendorScript('jszip.min.js');
+    const zip = await JSZip.loadAsync(await file.arrayBuffer());
+    const main = zip.file('word/document.xml');
+    if(!main) throw new Error('keine gültige Word-Datei');
+    const text = officeParagraphs(await main.async('string'), 'w:p', 'w:t');
+    return { text, info: `${text.split(/\s+/).filter(Boolean).length.toLocaleString('de-DE')} Wörter`, warn: text.trim() ? '' : 'kein Text gefunden' };
+  }
+
+  async function readPptx(file){
+    await loadVendorScript('jszip.min.js');
+    const zip = await JSZip.loadAsync(await file.arrayBuffer());
+    const num = name => parseInt(name.match(/(\d+)\.xml$/)[1]);
+    const slides = Object.keys(zip.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a, b) => num(a) - num(b));
+    if(slides.length === 0) throw new Error('keine gültige PowerPoint-Datei');
+    const parts = [];
+    for(let i = 0; i < slides.length; i++){
+      let text = officeParagraphs(await zip.file(slides[i]).async('string'), 'a:p', 'a:t');
+      // Sprecher-Notizen gehören über die Beziehungs-Datei zur Folie
+      const rels = zip.file(slides[i].replace('slides/', 'slides/_rels/') + '.rels');
+      const m = rels && (await rels.async('string')).match(/notesSlides\/(notesSlide\d+\.xml)/);
+      const notesFile = m && zip.file('ppt/notesSlides/' + m[1]);
+      if(notesFile){
+        const notes = officeParagraphs(await notesFile.async('string'), 'a:p', 'a:t').split('\n').filter(l => !/^\d+$/.test(l.trim())).join('\n');
+        if(notes.trim()) text += `\nNotizen: ${notes}`;
+      }
+      if(text.trim()) parts.push(`[Folie ${i + 1}]\n${text}`);
+    }
+    const text = parts.join('\n\n');
+    return { text, info: `${slides.length} Folien`, warn: text.trim() ? '' : 'kein Text gefunden — nur Bilder? Dann lieber in Claude anhängen' };
+  }
+
+  async function readAnyFile(file){
+    const name = file.name.toLowerCase();
+    if(name.endsWith('.pdf') || file.type === 'application/pdf') return readPdf(file);
+    if(name.endsWith('.docx')) return readDocx(file);
+    if(name.endsWith('.pptx')) return readPptx(file);
+    if(/\.(txt|md)$/.test(name)){
+      const text = (await file.text()).trim();
+      return { text, info: `${text.length.toLocaleString('de-DE')} Zeichen`, warn: text ? '' : 'leer' };
+    }
+    if(/\.(doc|ppt)$/.test(name)) throw new Error('altes Format — bitte als .docx/.pptx oder PDF speichern');
+    throw new Error('Format nicht unterstützt');
+  }
+
+  function addExtractFiles(fileList){
+    Array.from(fileList).forEach(file => {
+      const entry = { id: ++extractIdCounter, name: file.name, text: '', status: 'loading', info: 'wird gelesen …' };
+      extractedFiles.push(entry);
+      // nacheinander auslesen, damit auch große Semester-PDFs den Browser nicht einfrieren
+      extractQueue = extractQueue.then(async () => {
+        if(!extractedFiles.includes(entry)) return;
+        try {
+          const r = await readAnyFile(file);
+          entry.text = r.text.trim();
+          entry.status = r.warn ? 'warn' : 'ok';
+          entry.info = r.warn ? `${r.info} · ${r.warn}` : `✓ ${r.info}`;
+        } catch(e){
+          entry.status = 'err';
+          entry.text = '';
+          entry.info = e && e.message && !/^[A-Z][a-zA-Z]*Error/.test(e.message) && e.message.length < 90 ? e.message : 'konnte nicht gelesen werden';
+        }
+        renderExtractList();
+        render();
+      });
+    });
+    renderExtractList();
+    render();
+  }
+
+  function renderExtractList(){
+    const list = document.getElementById('extractList');
+    list.innerHTML = '';
+    extractedFiles.forEach(f => {
+      const li = document.createElement('li');
+      const name = document.createElement('span'); name.className = 'ex-name'; name.textContent = f.name;
+      const info = document.createElement('span'); info.className = 'ex-info ' + (f.status === 'loading' ? '' : f.status); info.textContent = f.info;
+      const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'ex-remove'; rm.textContent = '×'; rm.title = 'Entfernen';
+      rm.addEventListener('click', () => { extractedFiles = extractedFiles.filter(x => x !== f); renderExtractList(); render(); });
+      li.append(name, info, rm);
+      list.appendChild(li);
+    });
+
+    const summary = document.getElementById('extractSummary');
+    const chars = extractedFiles.reduce((s, f) => s + f.text.length, 0);
+    summary.className = 'extract-summary';
+    if(chars === 0){ summary.textContent = ''; return; }
+    const tokens = Math.round(chars / 3.5);
+    const words = Math.round(chars / 6.5);
+    if(tokens > 150000){
+      summary.className = 'extract-summary warn';
+      summary.textContent = `Insgesamt ca. ${words.toLocaleString('de-DE')} Wörter — das ist vermutlich zu viel für einen einzelnen Claude-Chat. Nimm weniger Dateien und bau lieber pro Kapitel oder Themenblock einen Hub (später zusammenführbar, siehe unten).`;
+    } else {
+      summary.textContent = `Insgesamt ca. ${words.toLocaleString('de-DE')} Wörter — wird automatisch in deinen Prompt eingebaut.` + (chars > 20000 ? ' Bei so langen Texten macht Claude beim Einfügen automatisch einen Anhang daraus — das ist normal.' : '');
+    }
+  }
+
+  const extractDrop = document.getElementById('extractDrop');
+  document.getElementById('extractFiles').addEventListener('change', e => { addExtractFiles(e.target.files); e.target.value = ''; });
+  ['dragenter', 'dragover'].forEach(t => extractDrop.addEventListener(t, e => { e.preventDefault(); extractDrop.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach(t => extractDrop.addEventListener(t, e => { e.preventDefault(); extractDrop.classList.remove('drag'); }));
+  extractDrop.addEventListener('drop', e => addExtractFiles(e.dataTransfer.files));
 
   document.getElementById('buildBtn').addEventListener('click', () => {
     const prompt = buildPrompt();
